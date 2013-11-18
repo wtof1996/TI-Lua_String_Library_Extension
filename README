@@ -1,0 +1,4 @@
+This is a string library for TI-Lua on Nspire.
+
+'ctype' is a library just do the same things as the 'ctype.h' in C.
+'ustring' is a library which provides UTF8 string function support  & a UTF8 string class.
