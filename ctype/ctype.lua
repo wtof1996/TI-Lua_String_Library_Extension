@@ -66,7 +66,14 @@ end
 
 --Public function
 function isalnum(char)
+    local res, err = ___ctypeCheckInput(char);
+    if(err ~= nil) then return nil, err end;
 
+    if( ((res >= 0x30) and (res <= 0x39)) or
+        ((res >= 0x41) and (res <= 0x5A))  or
+        ((res >= 0x61) and (res <= 0x7A))
+       ) then return true, nil end;
+    return false, nil;
 end
 
 function isalpha(char)
