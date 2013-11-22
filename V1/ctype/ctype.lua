@@ -22,10 +22,10 @@
     Each functions returns two value: res & err.
     For testing functions, res can be true, false or nil.For converting functions, res can be result or nil.
     When res is nil,it means an error occured,the err will contain a short discription.Otherwise the err will be nil.
-    Suggestion:Use assert function to deal with error massage like this:
+    Suggestion:If you have an error handler(by platform.registerErrorHandler), please use assert function like this:
         test_result = assert(isnumber("122"));
+    If there's something wrong it will throw an error, then you can deal it in your handler.
 
-    _ctypeInput is a private function, which used to check your input and do some convert.
 ]]--
 
 --[[
@@ -49,15 +49,19 @@
     0x7F        backspace character(DEL)
 ]]--
 
+ctype = {};
+--The exception  table
+ctype.exception = {["invChar"] = "ctype:invalid character", ["invType"] = "ctype:invalid type", ["longString"] = "ctype:the string is too long"};
+
 --This private function is used to check input & convert all kinds of input into number.
-function ___ctypeCheckInput(input)
+function ctype.CheckInput(input)
     if(type(input) == "number") then
         if((input > 0x7F) or (input < 0) or (math.ceil(input)) ~= input)  then return nil, "ctype:invalid character" end;
         return input;
     elseif(type(input) == "string") then
         if(#input > 1) then return nil, "ctype:the string is too long" end;
         local res = input:byte();
-        if((res > 0x7F) or (res < 0) or (math.ceil(res)) ~= res)  then return nil, "ctype:invalid character" end;
+        if((res > 0x7F) or (res < 0))  then return nil, "ctype:invalid character" end;
         return res;
     else
         return nil, "ctype:invalid type";
@@ -65,7 +69,7 @@ function ___ctypeCheckInput(input)
 end
 
 --Public function
-function isalnum(char)
+function ctype.isalnum(char)
     local res, err = ___ctypeCheckInput(char);
     if(err ~= nil) then return nil, err end;
 
@@ -76,54 +80,64 @@ function isalnum(char)
     return false, nil;
 end
 
-function isalpha(char)
+function ctype.isalpha(char)
+    local res, err = ctype.CheckInput(char);
+    if(err ~= nil) then return nil, err end;
+
+    if( ((res >= 0x41) and (res <= 0x5A))  or
+        ((res >= 0x61) and (res <= 0x7A))
+       ) then return true, nil end;
+    return false, nil;
+end
+
+function ctype.isblank(char)
 
 end
 
-function isblank(char)
+function ctype.iscntrl(char)
 
 end
 
-function iscntrl(char)
+function ctype.isdigit(char)
+    local res, err = ctype.CheckInput(char);
+    if(err ~= nil) then return nil, err end;
+
+    if( ((res >= 0x30) and (res <= 0x39))) then return true, nil end;
+    return false, nil;
+end
+
+function ctype.isgraph(char)
 
 end
 
-function isdigit(char)
+function ctype.islower(char)
 
 end
 
-function isgraph(char)
+function ctype.isprint(char)
 
 end
 
-function islower(char)
+function ctype.ispunct(char)
 
 end
 
-function isprint(char)
+function ctype.isspace(char)
 
 end
 
-function ispunct(char)
+function ctype.isupper(char)
 
 end
 
-function isspace(char)
+function ctype.isxdigit(char)
 
 end
 
-function isupper(char)
+function ctype.tolower(char)
 
 end
 
-function isxdigit(char)
-
-end
-
-function tolower(char)
-
-end
-
-function toupper(char)
+function ctype.toupper(char)
 
 end
