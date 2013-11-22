@@ -23,7 +23,7 @@
     For testing functions, res can be true, false or nil.For converting functions, res can be result or nil.
     When res is nil,it means an error occured,the err will contain a short discription.Otherwise the err will be nil.
     Suggestion:If you have an error handler(by platform.registerErrorHandler), please use assert function like this:
-        test_result = assert(isnumber("122"));
+        test_result = assert(isnumber("1"));
     If there's something wrong it will throw an error, then you can deal it in your handler.
 
 ]]--
@@ -95,7 +95,11 @@ function ctype.isblank(char)
 end
 
 function ctype.iscntrl(char)
+    local res, err = ctype.CheckInput(char);
+    if(err ~= nil) then return nil, err end;
 
+    if( ((res < 0x20) or (res == 0x7F))) then return true, nil end;
+    return false, nil;
 end
 
 function ctype.isdigit(char)
