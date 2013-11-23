@@ -56,21 +56,21 @@ ctype.exception = {["invChar"] = "ctype:invalid character", ["invType"] = "ctype
 --This private function is used to check input & convert all kinds of input into number.
 function ctype.CheckInput(input)
     if(type(input) == "number") then
-        if((input > 0x7F) or (input < 0) or (math.ceil(input)) ~= input)  then return nil, "ctype:invalid character" end;
+        if((input > 0x7F) or (input < 0) or (math.ceil(input)) ~= input)  then return nil, ctype.exception.invChar end;
         return input;
     elseif(type(input) == "string") then
-        if(#input > 1) then return nil, "ctype:the string is too long" end;
+        if(#input > 1) then return nil, ctype.exception.longString end;
         local res = input:byte();
-        if((res > 0x7F) or (res < 0))  then return nil, "ctype:invalid character" end;
+        if((res > 0x7F) or (res < 0))  then return nil, ctype.exception.invChar end;
         return res;
     else
-        return nil, "ctype:invalid type";
+        return nil, ctype.exception.invType;
     end
 end
 
 --Public function
 function ctype.isalnum(char)
-    local res, err = ___ctypeCheckInput(char);
+    local res, err = ctype.CheckInput(char);
     if(err ~= nil) then return nil, err end;
 
     if( ((res >= 0x30) and (res <= 0x39)) or
@@ -91,7 +91,11 @@ function ctype.isalpha(char)
 end
 
 function ctype.isblank(char)
+    local res, err = ctype.CheckInput(char);
+    if(err ~= nil) then return nil, err end;
 
+    if( (res == 0x09) or (res == 0x2D) ) then return true, nil end;
+    return false, nil;
 end
 
 function ctype.iscntrl(char)
@@ -111,37 +115,92 @@ function ctype.isdigit(char)
 end
 
 function ctype.isgraph(char)
+    local res, err = ctype.CheckInput(char);
+    if(err ~= nil) then return nil, err end;
 
+    if( ((res >= 0x21) and (res <= 0x7E))) then return true, nil end;
+    return false, nil;
 end
 
 function ctype.islower(char)
+    local res, err = ctype.CheckInput(char);
+    if(err ~= nil) then return nil, err end;
 
+    if( ((res >= 0x61) and (res <= 0x7A))) then return true, nil end;
+    return false, nil;
 end
 
 function ctype.isprint(char)
+    local res, err = ctype.CheckInput(char);
+    if(err ~= nil) then return nil, err end;
 
+    if( ((res >= 0x20) and (res <= 0x7E))) then return true, nil end;
+    return false, nil;
 end
 
 function ctype.ispunct(char)
+    local res, err = ctype.CheckInput(char);
+    if(err ~= nil) then return nil, err end;
 
+    if( ((res >= 0x21) and (res <= 0x2F))  or
+        ((res >= 0x3A) and (res <= 0x40))  or
+        ((res >= 0x5B) and (res <= 0x60))  or
+        ((res >= 0x7B) and (res <= 0x7E))
+       ) then return true, nil end;
+    return false, nil;
 end
 
 function ctype.isspace(char)
+    local res, err = ctype.CheckInput(char);
+    if(err ~= nil) then return nil, err end;
 
+    if( ((res >= 0x09) and (res <= 0x0D))  or
+        (res == 0x20)
+       ) then return true, nil end;
+    return false, nil;
 end
 
 function ctype.isupper(char)
+    local res, err = ctype.CheckInput(char);
+    if(err ~= nil) then return nil, err end;
 
+    if( ((res >= 0x41) and (res <= 0x5A))) then return true, nil end;
+    return false, nil;
 end
 
 function ctype.isxdigit(char)
+    local res, err = ctype.CheckInput(char);
+    if(err ~= nil) then return nil, err end;
 
+    if( ((res >= 0x30) and (res <= 0x39))  or
+        ((res >= 0x41) and (res <= 0x46))  or
+        ((res >= 0x61) and (res <= 0x66))
+       ) then return true, nil end;
+    return false, nil;
 end
 
 function ctype.tolower(char)
+    local res, err = ctype.CheckInput(char);
+    if(err ~= nil) then return nil, err end;
 
+    if(ctype.isalpha(res)) then
+        if(res < 0x61) then
+            return res + 0x20;
+        end
+        return res;
+    end
+    return nil, ctype.exception.invChar;
 end
 
 function ctype.toupper(char)
+    local res, err = ctype.CheckInput(char);
+    if(err ~= nil) then return nil, err end;
 
+    if(ctype.isalpha(res)) then
+        if(res > 0x5A) then
+            return res - 0x20;
+        end
+        return res;
+    end
+    return nil, ctype.exception.invChar;
 end
