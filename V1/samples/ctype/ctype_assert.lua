@@ -1,5 +1,5 @@
 --[[
-    TI-Lua String Library Extension ---- ctype(non assert version)
+    TI-Lua String Library Extension ---- ctype (assert support version)
     Copyright 2013 wtof1996
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,11 +17,15 @@
     Notice: This Lib ONLY ACCEPT SINGLE ASCII CHAR!(either num or a string which contains one character is ok.)
 
     Each functions returns two value: res & err.
-    For testing functions, res can be true, false or nil.For converting functions, res can be result or nil.
+    For testing functions, res can be 1(true), 0(false) or nil.For converting functions, res can be result or nil(if input is invalid).
+    P.S:I use the numeric instead of the Boolean was because wehn you return a value to assert , it would throw an error.
+        If you still want to use Boolean use the ctype.resBool Tablelike this:
+        a = ctype.resTable[assert(ctype.isalnum("z"))]
+
     When res is nil,it means an error occured,the err will contain a short discription.Otherwise the err will be nil.
-
-    If you want to use assert with this lib,please use "ctype_assert.lua"
-
+    Suggestion:If you have an error handler(by platform.registerErrorHandler), please use assert function like this:
+        test_result = assert(isnumber("1"));
+    If there's something wrong it will throw an error, then you can deal it in your handler.
 
     ASCII Table:
 
@@ -42,7 +46,7 @@
     0x7B-0x7E   {|}~
     0x7F        backspace character(DEL)
 
-        Public functions:
+    Public functions:
 
         Testing functions:
             ctype.isalnum(char)
@@ -61,11 +65,16 @@
         Converting functions:
             ctype.tolower(char)
             ctype.toupper(char)
+
+
 ]]--
 
 ctype = {};
 --The exception  table
 ctype.exception = {["invChar"] = "ctype:invalid character", ["invType"] = "ctype:invalid type", ["longString"] = "ctype:the string is too long"};
+
+--The Boolean result table
+ctype.resTable = {};ctype.resTable[0] = false;ctype.resTable[1] = true;
 
 --This private function is used to check input & convert all kinds of input into number.
 function ctype.CheckInput(input)
@@ -90,8 +99,8 @@ function ctype.isalnum(char)
     if( ((res >= 0x30) and (res <= 0x39)) or
         ((res >= 0x41) and (res <= 0x5A))  or
         ((res >= 0x61) and (res <= 0x7A))
-       ) then return true, nil end;
-    return false, nil;
+       ) then return 1, nil end;
+    return 0, nil;
 end
 
 function ctype.isalpha(char)
@@ -100,56 +109,56 @@ function ctype.isalpha(char)
 
     if( ((res >= 0x41) and (res <= 0x5A))  or
         ((res >= 0x61) and (res <= 0x7A))
-       ) then return true, nil end;
-    return false, nil;
+       ) then return 1, nil end;
+    return 0, nil;
 end
 
 function ctype.isblank(char)
     local res, err = ctype.CheckInput(char);
     if(err ~= nil) then return nil, err end;
 
-    if( (res == 0x09) or (res == 0x2D) ) then return true, nil end;
-    return false, nil;
+    if( (res == 0x09) or (res == 0x2D) ) then return 1, nil end;
+    return 0, nil;
 end
 
 function ctype.iscntrl(char)
     local res, err = ctype.CheckInput(char);
     if(err ~= nil) then return nil, err end;
 
-    if( ((res < 0x20) or (res == 0x7F))) then return true, nil end;
-    return false, nil;
+    if( ((res < 0x20) or (res == 0x7F))) then return 1, nil end;
+    return 0, nil;
 end
 
 function ctype.isdigit(char)
     local res, err = ctype.CheckInput(char);
     if(err ~= nil) then return nil, err end;
 
-    if( ((res >= 0x30) and (res <= 0x39))) then return true, nil end;
-    return false, nil;
+    if( ((res >= 0x30) and (res <= 0x39))) then return 1, nil end;
+    return 0, nil;
 end
 
 function ctype.isgraph(char)
     local res, err = ctype.CheckInput(char);
     if(err ~= nil) then return nil, err end;
 
-    if( ((res >= 0x21) and (res <= 0x7E))) then return true, nil end;
-    return false, nil;
+    if( ((res >= 0x21) and (res <= 0x7E))) then return 1, nil end;
+    return 0, nil;
 end
 
 function ctype.islower(char)
     local res, err = ctype.CheckInput(char);
     if(err ~= nil) then return nil, err end;
 
-    if( ((res >= 0x61) and (res <= 0x7A))) then return true, nil end;
-    return false, nil;
+    if( ((res >= 0x61) and (res <= 0x7A))) then return 1, nil end;
+    return 0, nil;
 end
 
 function ctype.isprint(char)
     local res, err = ctype.CheckInput(char);
     if(err ~= nil) then return nil, err end;
 
-    if( ((res >= 0x20) and (res <= 0x7E))) then return true, nil end;
-    return false, nil;
+    if( ((res >= 0x20) and (res <= 0x7E))) then return 1, nil end;
+    return 0, nil;
 end
 
 function ctype.ispunct(char)
@@ -160,8 +169,8 @@ function ctype.ispunct(char)
         ((res >= 0x3A) and (res <= 0x40))  or
         ((res >= 0x5B) and (res <= 0x60))  or
         ((res >= 0x7B) and (res <= 0x7E))
-       ) then return true, nil end;
-    return false, nil;
+       ) then return 1, nil end;
+    return 0, nil;
 end
 
 function ctype.isspace(char)
@@ -170,16 +179,16 @@ function ctype.isspace(char)
 
     if( ((res >= 0x09) and (res <= 0x0D))  or
         (res == 0x20)
-       ) then return true, nil end;
-    return false, nil;
+       ) then return 1, nil end;
+    return 0, nil;
 end
 
 function ctype.isupper(char)
     local res, err = ctype.CheckInput(char);
     if(err ~= nil) then return nil, err end;
 
-    if( ((res >= 0x41) and (res <= 0x5A))) then return true, nil end;
-    return false, nil;
+    if( ((res >= 0x41) and (res <= 0x5A))) then return 1, nil end;
+    return 0, nil;
 end
 
 function ctype.isxdigit(char)
@@ -189,8 +198,8 @@ function ctype.isxdigit(char)
     if( ((res >= 0x30) and (res <= 0x39))  or
         ((res >= 0x41) and (res <= 0x46))  or
         ((res >= 0x61) and (res <= 0x66))
-       ) then return true, nil end;
-    return false, nil;
+       ) then return 1, nil end;
+    return 0, nil;
 end
 
 function ctype.tolower(char)
