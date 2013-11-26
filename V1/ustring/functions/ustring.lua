@@ -1,5 +1,5 @@
 --[[
-    TI-Lua String Library Extension ---- ustring function
+    TI-Lua String Library Extension ---- ustring functions
     Copyright 2013 wtof1996
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,3 +14,30 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 ]]--
+function string.ubytes(str)
+
+end
+
+function string.ulen(str)
+
+end
+
+function string.UTF8CharLen(num)
+
+end
+
+function string.uRealPos(str, pos)
+
+end
+
+function string.MbtoUTF8table(mbstring)
+
+end
+
+function string.UT8tabletoMb(UTF8table)
+
+end
+
+
+
+
