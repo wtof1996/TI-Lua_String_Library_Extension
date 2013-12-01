@@ -1,9 +1,40 @@
 --[[
-    #FreInclude <ctype\ctype_assert.lua>
+    #FreInclude <ctype\ctype.lua>
 ]]--
 
-print(tostring(assert(ctype.isalnum("Z"))));
-print(tostring(assert(ctype.islower("Z"))));
-print(tostring(assert(ctype.isupper("Z"))));
-print(tostring(assert(ctype.isxdigit("A"))));
-print(tostring(assert(ctype.isprint("Z"))));
+--[[
+    This is a sample which shows how to use ctype lib.
+    In this sample, user only can input digits to display on the screen.
+]]
+
+charStack = {};
+errString = "";
+
+function on.charIn(char)
+    local res, err = ctype.isdigit(char);
+    if(err ~= nil) then
+        errString = err;
+    elseif(res == true) then
+        table.insert(charStack, char);
+        errString = "";
+    end
+    platform.window:invalidate();
+end
+
+function on.backspaceKey()
+    table.remove(charStack);
+    platform.window:invalidate();
+end
+
+
+function on.paint(gc)
+    gc:setColorRGB(0xffffff);
+    gc:fillRect(0, 0, 320, 240);
+    gc:setColorRGB(0x000000);
+
+    gc:drawString("Input some character:", 0, 20);
+    gc:drawString(table.concat(charStack), 0, 100);
+    if(errString ~= "") then
+        gc:drawString("error:" .. errString, 0, 150);
+    end
+end
