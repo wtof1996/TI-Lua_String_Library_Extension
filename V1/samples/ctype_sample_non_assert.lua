@@ -5,7 +5,8 @@
 --[[
     This is a sample which shows how to use ctype lib.
     In this sample, user only can input digits to display on the screen.
-]]
+    P.S:You'd better use this with iLua.
+]]--
 
 charStack = {};
 errString = "";
@@ -13,7 +14,13 @@ errString = "";
 function on.charIn(char)
     local res, err = ctype.isdigit(char);
     if(err ~= nil) then
-        errString = err;
+        if(err == ctype.exception.invChar)then
+            errString ="Invalid character, please try again.";
+        elseif(err == ctype.exception.invType) then
+            errString ="Invalid type, please try again.";
+        elseif(err == ctype.exception.longString) then
+            errString = "Input is too long, please try again.";
+        end
     elseif(res == true) then
         table.insert(charStack, char);
         errString = "";

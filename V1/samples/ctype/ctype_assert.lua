@@ -19,10 +19,10 @@
     Each functions returns two value: res & err.
     For testing functions, res can be 1(true), 0(false) or nil.For converting functions, res can be result or nil(if input is invalid).
     P.S:I use the numeric instead of the Boolean was because wehn you return a value to assert , it would throw an error.
-        If you still want to use Boolean, just use ctype.flase instead of false, ctype.true instead of true.Like this
+        If you still want to use Boolean, just use ctype["flase"] instead of false, ctype["true"] instead of true.Like this
 
         local res = assert(ctype.isalpha("a"));
-        if(res == ctype.true) then
+        if(res == ctype["true"]) then
          ...
         end
 
@@ -78,7 +78,7 @@ ctype = {};
 ctype.exception = {["invChar"] = "ctype:invalid character", ["invType"] = "ctype:invalid type", ["longString"] = "ctype:the string is too long"};
 
 --The meaning result of testing functions
-ctype.false = 0;ctype.true = 1;
+ctype["false"] = 0;ctype["true"] = 1;
 
 --This private function is used to check input & convert all kinds of input into number.
 function ctype.CheckInput(input)
