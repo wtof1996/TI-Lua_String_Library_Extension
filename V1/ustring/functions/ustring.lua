@@ -25,13 +25,21 @@
 
     string.ubyte(uchar)
         The UTF8 version of string.byte.
-    string.ulen(str)
+    string.ulen(ustr)
         The UTF8 version of string.len.
+    string.UTF8CharLen(unum)
+        Get the number of bytes to encode a Unicode code in UTF8.
+
 ]]--
 
 __ustring = {};
-__ustring.MN = {["Flag1"] = 0x80, ["Flag2"] = 0xC0, ["Flag3"] = 0xE0};--Magic Number
-__ustring.exception = {["invType"] = "ustring:invalid type"};--The exception list
+__ustring.MN = {["Flag1"] = 0x80, ["Flag2"] = 0xC0, ["Flag3"] = 0xE0};
+--[[Magic Number, this is used to recongize each bytes.
+   U+0000 ~ U+007F use Flag1
+   U+0080 ~ U+07FF use Flag2
+   U+0800 ~ U+FFFF use Flag3
+]]--
+__ustring.exception = {["invType"] = "ustring:invalid type", ["outRange"] = "ustirng:outside acceptable range"};--The exception list
 
 function string.ubyte(uchar)
     if(type(uchar) ~= "string") then
@@ -52,16 +60,16 @@ function string.ubyte(uchar)
     return res, nil;
 end
 
-function string.ulen(str)
-    if(type(str) ~= "string") then
+function string.ulen(ustr)
+    if(type(ustr) ~= "string") then
        return nil, __ustring.exception.invType;
     end
 
-    local bytes, res, index = #str, 0, 1;
+    local bytes, res, index = #ustr, 0, 1;
     local tmp_byte;
 
     while(index <= bytes) do
-        tmp_byte = str:byte(index);
+        tmp_byte = ustr:byte(index);
         if(tmp_byte < __ustring.MN.Flag1) then
             index = index + 1;
         else
@@ -77,8 +85,20 @@ function string.ulen(str)
     return res, nil;
 end
 
-function string.UTF8CharLen(num)
+function string.UTF8CharLen(unum)
+    if(type(unum) ~= "number") then
+        return nil, __ustring.exception.invType;
+    elseif(unum > 0xFFFF) then
+        return nil, __ustring.exception.outRange;
+    end
 
+    if(unum >= 0x0800) then --U+0800 ~ U+FFFF uses 3 bytes
+        return 3, nil;
+    elseif(unum >= 0x0080) then --U+0080 ~ U+07FF uses 2 bytes
+        return 2, nil;
+    else                --U+0000 ~ U+007F uses 1 byte.
+        return 1, nil;
+    end
 end
 
 function string.uRealPos(str, pos)
