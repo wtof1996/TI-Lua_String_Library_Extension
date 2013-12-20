@@ -23,13 +23,14 @@
 
     Functions List:
 
-    string.ubyte(uchar)
-        The UTF8 version of string.byte.
-    string.ulen(ustr)
-        The UTF8 version of string.len.
-    string.UTF8CharLen(unum)
-        Get the number of bytes to encode a Unicode code in UTF8.
-
+        string.ubyte(uchar)
+            The UTF8 version of string.byte.
+        string.ulen(ustr)
+            The UTF8 version of string.len.
+        string.UTF8CharLen(unum)
+            Return the number of bytes to encode a Unicode code in UTF8.
+        string.uRealPos(ustr, pos)
+            Return the real position(in UTF8) of a byte.
 ]]--
 
 __ustring = {};
@@ -101,8 +102,27 @@ function string.UTF8CharLen(unum)
     end
 end
 
-function string.uRealPos(str, pos)
+function string.uRealPos(ustr, pos)
+    if(type(ustr) ~= "string") then
+        return nil, __ustring.exception.invType;
+    end
 
+    local len = #ustr;
+    if(pos > len) or (pos < 1) then
+        return nil, __ustring.exception.outRange;
+    end
+
+    local byte = ustr:byte(pos);
+    if(byte >= __ustring.MN.Flag1 and byte < __ustring.MN.Flag2) then --Adjust the pos to point at the first byte of the UTF8 character
+        byte = ustr:byte(pos - 1);
+        if(byte >= __ustring.MN.Flag2) then --this byte is the second byte of the UTF8 character
+            pos = pos - 1;
+        else
+            pos = pos - 2;  --Otherwise it is the third byte of the UTF8 character.
+        end
+    end
+
+    return assert(string.ulen(ustr:sub(1, pos))), nil;
 end
 
 function string.MbtoUTF8table(mbstring)
