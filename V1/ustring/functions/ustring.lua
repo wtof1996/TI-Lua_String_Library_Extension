@@ -122,7 +122,23 @@ function string.uRealPos(ustr, pos)
         end
     end
 
-    return assert(string.ulen(ustr:sub(1, pos))), nil;
+    local res, index = 0, 1;
+
+    while(index < pos) do
+        byte = ustr:byte(index);
+        if(byte < __ustring.MN.Flag1) then
+            index = index + 1;
+        else
+            if(byte >= __ustring.MN.Flag3) then
+                index = index + 3;
+            else
+                index = index + 2;
+            end
+        end
+        res = res + 1;
+    end
+
+    return res + 1, nil;
 end
 
 function string.MbtoUTF8table(mbstring)
