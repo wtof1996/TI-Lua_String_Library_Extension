@@ -31,6 +31,8 @@
             Return the number of bytes to encode a Unicode code in UTF8.
         string.uRealPos(ustr, pos)
             Return the real position(in UTF8) of a byte.
+        string.MbtoUTF8table(mbstr)
+            Return a table which contains the code of each UTF8 characters.
 ]]--
 
 __ustring = {};
@@ -40,12 +42,13 @@ __ustring.MN = {["Flag1"] = 0x80, ["Flag2"] = 0xC0, ["Flag3"] = 0xE0};
    U+0080 ~ U+07FF use Flag2
    U+0800 ~ U+FFFF use Flag3
 ]]--
-__ustring.exception = {["invType"] = "ustring:invalid type", ["outRange"] = "ustirng:outside acceptable range"};--The exception list
+__ustring.exception = {["invType"] = "ustring:invalid type", ["outRange"] = "ustirng:outside acceptable range", ["invPos"] = "ustirng:invalid character position"};--The exception list
 
 function string.ubyte(uchar)
     if(type(uchar) ~= "string") then
        return nil, __ustring.exception.invType;
     end
+
     local a, b, c, res = uchar:byte(1), uchar:byte(2), uchar:byte(3), 0;
 
     if(a < __ustring.MN.Flag1) then
@@ -107,9 +110,20 @@ function string.uRealPos(ustr, pos)
         return nil, __ustring.exception.invType;
     end
 
+    if (math.ceil(pos)~= pos) then
+            return nil, __ustring.exception.invPos;
+    elseif(type(pos) ~= "number") then
+            return nil, __ustring.exception.invType;
+    end
+
+
     local len = #ustr;
-    if(pos > len) or (pos < 1) then
+    if((pos <-len) or (pos > len)) then
         return nil, __ustring.exception.outRange;
+    elseif(pos == 0) then
+        pos = 1;
+    elseif(pos < 0) then        --From the back
+        pos = len + pos + 1;
     end
 
     local byte = ustr:byte(pos);
@@ -141,11 +155,49 @@ function string.uRealPos(ustr, pos)
     return res + 1, nil;
 end
 
-function string.MbtoUTF8table(mbstring)
+function string.MbtoUTF8table(mbstr)
+    if(type(mbstr) ~= "string") then
+        return nil, __ustring.exception.invType;
+    end
+    local ubyte =
+        function (a, b, c)
+            local res = 0
+            if(a < __ustring.MN.Flag1) then
+                res = a;
+            else
+                if(a >= __ustring.MN.Flag3) then
+                    res = (a - __ustring.MN.Flag3) * 4096 + (b - __ustring.MN.Flag1) * 64 + (c - __ustring.MN.Flag1);
+                else
+                    res = (a - __ustring.MN.Flag2) * 64 + (b - __ustring.MN.Flag1);
+                end
+            end
+            return res;
+        end
 
+    local res = {};
+    local index, bytes= 1, #mbstr;
+    local tmp_byte;
+
+    while(index <= bytes) do
+        tmp_byte = mbstr:byte(index);
+        if(tmp_byte < __ustring.MN.Flag1) then
+            table.insert(res, tmp_byte);
+            index = index + 1;
+        else
+            if(tmp_byte >= __ustring.MN.Flag3) then
+                table.insert(res, ubyte(mbstr:byte(index, index + 2)));
+                index = index + 3;
+            else
+                table.insert(res, ubyte(mbstr:byte(index, index + 1)));
+                index = index + 2;
+            end
+        end
+    end
+
+    return res;
 end
 
-function string.UT8tabletoMb(UTF8table)
+function string.UTF8tabletoMb(UTF8table)
 
 end
 
