@@ -198,7 +198,14 @@ function string.MbtoUTF8table(mbstr)
 end
 
 function string.UTF8tabletoMb(UTF8table)
+    if(type(UTF8table) ~= "table") then
+        return nil, __ustring.exception.invType;
+    end
+    for i, v in pairs(UTF8table) do
+        UTF8table[i] = string.uchar(v);
+    end
 
+    return table.concat(UTF8table);
 end
 
 
