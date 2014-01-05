@@ -201,11 +201,12 @@ function string.UTF8tabletoMb(UTF8table)
     if(type(UTF8table) ~= "table") then
         return nil, __ustring.exception.invType;
     end
+    local res = {};
     for i, v in pairs(UTF8table) do
-        UTF8table[i] = string.uchar(v);
+        res[i] = string.uchar(v);
     end
 
-    return table.concat(UTF8table);
+    return table.concat(res);
 end
 
 
