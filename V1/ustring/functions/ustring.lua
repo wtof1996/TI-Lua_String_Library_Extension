@@ -33,6 +33,8 @@
             Return the real position(in UTF8) of a byte.
         string.MbtoUTF8table(mbstr)
             Return a table which contains the code of each UTF8 characters.
+        string.UTF8tabletoMb(UTF8table)
+            Return a UTF8 string from a table which contains the code of each UTF8 characters.
 ]]--
 
 __ustring = {};
