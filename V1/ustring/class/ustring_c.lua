@@ -14,3 +14,65 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 ]]--
+
+ustring = class();
+
+function ustring:init(str)
+  
+end
+
+function ustring:push_back(unum)
+
+end
+
+function ustring:clear()
+  
+end
+
+function ustring:append(b)
+
+end
+
+function ustring:erase(a, b)
+
+end
+
+function ustring:insert(str, index)
+  
+end
+
+function ustring:resize(size)
+
+end
+
+function ustring:find(str, a, b)
+
+end
+
+function ustring:sub(a, b)
+  
+end
+
+function ustring:get(index)
+  
+end
+
+function ustring:set(index, d)
+  
+end
+
+function ustring:get_str()
+  
+end
+
+function ustring:len()
+
+end
+
+function ustring:concat(b)
+
+end
+
+function ustring:equal(b)
+  
+end
