@@ -48,6 +48,10 @@ function ustring:init(init_data)
     setmetatable(self, t);
 end
 
+function ustring:change_data(d)
+  
+end
+
 function ustring:push_back(unum)
 
 end
@@ -101,6 +105,16 @@ function ustring:concat(b)
 end
 
 function ustring:equal(b)
+    if(self.length ~= b.length) then return false; end
+  
+    local i = 1;
+    while(
+          (i <= self.length) and 
+          (self.data[i] == b.data[i])) do 
+        i = i + 1; 
+    end
+    if(i > self.length) then return true; end
+    return false;
   
 end
 
