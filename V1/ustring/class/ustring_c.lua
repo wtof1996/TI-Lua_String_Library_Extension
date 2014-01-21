@@ -23,9 +23,8 @@ ustring = class();
 function ustring:init(init_data)
     
     --metatable
-    local t = {};
+    local t = {}, m;
     t.__concat = self.concat;
-    t.__len = self.len;
     t.__eq = self.equal;
     t.__index = self.get;
     t.__newindex = self.set;
@@ -57,7 +56,9 @@ function ustring:push_back(unum)
 end
 
 function ustring:clear()
-  
+    self.data = {};
+    self.length = 0;
+    collectgarbage();
 end
 
 function ustring:append(b)
@@ -93,20 +94,35 @@ function ustring:set(index, d)
 end
 
 function ustring:get_str()
-  
-end
+    local res = {};
+    for i, v in pairs(self.data) do
+        res[i] = string.uchar(v);
+    end
 
-function ustring:len()
-
+    return table.concat(res);
 end
 
 function ustring:concat(b)
-
+    if(type(self) == "string") then 
+          self = ustring(self);
+    elseif(type(b) == "string") then 
+          b = ustring(b); 
+    end
+    --In fact the concat accept two parameters, maybe self is a normal string and the b is a ustring, or self
+    --is a ustring and b is a ustring.We need the convert in these cases.
+    
+    local res = self;
+    res.length = res.length + b.length;
+    for i, v in pairs(b.data) do
+        table.insert(res.data, v)
+    end
+    
+    return res;
 end
 
 function ustring:equal(b)
     if(self.length ~= b.length) then return false; end
-  
+    
     local i = 1;
     while(
           (i <= self.length) and 
