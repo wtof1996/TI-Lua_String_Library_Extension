@@ -16,7 +16,7 @@
 ]]--
 
 ustring = class();
-
+fustring = {}; --The ustring's member function
 --public member
 
 --the constructer
@@ -24,11 +24,17 @@ function ustring:init(init_data)
     
     --metatable
     local t = {}, m;
-    t.__concat = self.concat;
-    t.__eq = self.equal;
-    t.__index = self.get;
-    t.__newindex = self.set;
-    t.__tostring = self.get_str;
+    t.__concat = fustring.concat;
+    t.__eq = fustring.equal;
+    t.__index = fustring.get;
+    t.__newindex = fustring.set;
+    t.__tostring = fustring.get_str;
+    
+    
+    --copy the function member from fustring
+    for k, v in pairs(fustring) do
+        self[k] = v;
+    end
     
     --data initialization
     self.data = {};
@@ -47,53 +53,55 @@ function ustring:init(init_data)
     setmetatable(self, t);
 end
 
-function ustring:change_data(d)
+function fustring:change_data(d)
   
 end
 
-function ustring:push_back(unum)
+function fustring:push_back(unum)
 
 end
 
-function ustring:clear()
+function fustring:clear()
     self.data = {};
     self.length = 0;
+    self.isempty = true;
     collectgarbage();
 end
 
-function ustring:append(b)
+function fustring:append(b)
 
 end
 
-function ustring:erase(a, b)
+function fustring:erase(a, b)
 
 end
 
-function ustring:insert(str, index)
+function fustring:insert(str, index)
   
 end
 
-function ustring:resize(size)
+function fustring:resize(size)
 
 end
 
-function ustring:find(str, a, b)
+function fustring:find(str, a, b)
 
 end
 
-function ustring:sub(a, b)
+function fustring:sub(a, b)
   
 end
 
-function ustring:get(index)
+function fustring:get(index)
   
 end
 
-function ustring:set(index, d)
+function fustring:set(index, d)
   
 end
 
-function ustring:get_str()
+function fustring:get_str()
+    if(self.isempty) then return "" end;
     local res = {};
     for i, v in pairs(self.data) do
         res[i] = string.uchar(v);
@@ -102,7 +110,7 @@ function ustring:get_str()
     return table.concat(res);
 end
 
-function ustring:concat(b)
+function fustring:concat(b)
     if(type(self) == "string") then 
           self = ustring(self);
     elseif(type(b) == "string") then 
@@ -116,11 +124,11 @@ function ustring:concat(b)
     for i, v in pairs(b.data) do
         table.insert(res.data, v)
     end
-    
+    if(res.length ~= 0) then res.isempty = false; end;
     return res;
 end
 
-function ustring:equal(b)
+function fustring:equal(b)
     if(self.length ~= b.length) then return false; end
     
     local i = 1;
