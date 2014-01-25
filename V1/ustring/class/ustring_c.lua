@@ -39,6 +39,7 @@ function ustring:init(init_data)
     --data initialization
     self.data = {};
     self.isempty = false;
+    self.getchar = false;
     
     if(type(init_data) == "string") then
         self.data = ___ustring.Mb2UTF8t(init_data);
@@ -57,8 +58,12 @@ function fustring:change_data(d)
   
 end
 
-function fustring:push_back(unum)
+function fustring:push_back(value)
 
+    if(___ustring.checkUnicode == false) then return nil; end
+    self.length = self.length + 1;
+    table.insert(self.data, value);
+    
 end
 
 function fustring:clear()
@@ -68,12 +73,19 @@ function fustring:clear()
     collectgarbage();
 end
 
-function fustring:append(b)
-
-end
 
 function fustring:erase(a, b)
-
+    if(self.data[a] == nil) then return nil; end
+    
+    if(b ~= nil) then
+        if(self.data[b] == nil or a > b) then return nil; end
+        
+        for i = a, b do
+            table.remove(self.data, i);
+        end
+        self.length = self.length - (b - a + 1);
+        
+    end
 end
 
 function fustring:insert(str, index)
@@ -81,7 +93,31 @@ function fustring:insert(str, index)
 end
 
 function fustring:resize(size)
-
+    if( (type(size) ~= "number") or ((math.ceil(size)) ~= size) or size < 0) then
+        return nil;
+    end
+    
+    if(size == 0) then self:clear();return true; end
+    
+    
+    
+    if(size < self.length) then 
+        for i = self.length, size + 1, -1 do
+            table.remove(self.data);
+        end
+        self.length = size;
+        collectgarbage();
+        return true;
+    end
+   
+    for i = self.length + 1, size do
+        table.insert(self.data, 0);
+    end
+    
+    self.length = size;
+    
+    return true;
+    
 end
 
 function fustring:find(str, a, b)
@@ -93,24 +129,44 @@ function fustring:sub(a, b)
 end
 
 function fustring:get(index)
-  
+    if(self.data[index] == nil) then return nil; end
+    if(self.getchar) then
+        return string.uchar(self.data[index]);
+    end
+    
+    return self.data[index];
 end
 
-function fustring:set(index, d)
-  
+function fustring:set(index, value)
+    if((self.data[index] == nil) or
+        (type(value) ~= "number") or
+        (value < 0) or
+        (value > 65535) or
+        ((math.ceil(value)) ~= value)
+      ) 
+    then 
+        return nil; 
+    end
+    self.data[index] = value;
 end
 
 function fustring:get_str()
     if(self.isempty) then return "" end;
     local res = {};
-    for i, v in pairs(self.data) do
-        res[i] = string.uchar(v);
+    for k, v in pairs(self.data) do
+        res[k] = string.uchar(v);
     end
 
     return table.concat(res);
 end
 
 function fustring:concat(b)
+    if(type(self) == "number") then 
+          self = tostring(self);
+    elseif(type(b) == "number") then 
+          b = tostring(b); 
+    end
+    
     if(type(self) == "string") then 
           self = ustring(self);
     elseif(type(b) == "string") then 
@@ -119,9 +175,9 @@ function fustring:concat(b)
     --In fact the concat accept two parameters, maybe self is a normal string and the b is a ustring, or self
     --is a ustring and b is a ustring.We need the convert in these cases.
     
-    local res = self;
+    local res = self:copy();
     res.length = res.length + b.length;
-    for i, v in pairs(b.data) do
+    for k, v in pairs(b.data) do
         table.insert(res.data, v)
     end
     if(res.length ~= 0) then res.isempty = false; end;
@@ -142,6 +198,18 @@ function fustring:equal(b)
   
 end
 
+
+function fustring:copy() -- copy constructor
+    local res = ustring();
+    for k, v in pairs(self.data) do
+        table.insert(res.data, v);
+    end
+    res.isempty = self.isempty;
+    res.getchar = self.getchar;
+    res.length = self.length;
+    
+    return res;
+end
 --private member, which begin with 3 underscores
 ___ustring = {};
 ___ustring.MN = {["Flag1"] = 0x80, ["Flag2"] = 0xC0, ["Flag3"] = 0xE0};
@@ -150,6 +218,20 @@ ___ustring.MN = {["Flag1"] = 0x80, ["Flag2"] = 0xC0, ["Flag3"] = 0xE0};
    U+0080 ~ U+07FF use Flag2
    U+0800 ~ U+FFFF use Flag3
 ]]--
+
+function ___ustring.checkUnicode(u)
+    if((type(u) ~= "number") or
+        (u < 0) or
+        (u > 65535) or
+        ((math.ceil(u)) ~= u)
+      ) 
+    then 
+        return false; 
+    end
+    
+    return true;
+end
+
 function ___ustring.Mb2UTF8t(mbstr)
     local ubyte =
         function (a, b, c)
