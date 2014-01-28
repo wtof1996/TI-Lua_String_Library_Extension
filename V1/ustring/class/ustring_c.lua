@@ -38,15 +38,12 @@ function ustring:init(init_data)
     
     --data initialization
     self.data = {};
-    self.isempty = false;
     self.getchar = false;
     
     if(type(init_data) == "string") then
         self.data = ___ustring.Mb2UTF8t(init_data);
     elseif(type(init_data) == "table") then
         self.data = init_data;
-    else
-        self.isempty = true;
     end
     
     self.length = #self.data;
@@ -54,13 +51,23 @@ function ustring:init(init_data)
     setmetatable(self, t);
 end
 
-function fustring:change_data(d)
-  
+function fustring:assign(d)
+    self:clear();
+    self.getchar = false;
+    
+    if(type(d) == "string") then
+        self.data = ___ustring.Mb2UTF8t(d);
+    elseif(type(d) == "table") then
+        self.data = d;
+    end
+    
+    self.length = #self.data;
+
 end
 
 function fustring:push_back(value)
 
-    if(___ustring.checkUnicode == false) then return nil; end
+    if(___ustring.checkUnicode(value) == false) then return nil; end
     self.length = self.length + 1;
     table.insert(self.data, value);
     
@@ -69,7 +76,6 @@ end
 function fustring:clear()
     self.data = {};
     self.length = 0;
-    self.isempty = true;
     collectgarbage();
 end
 
@@ -78,10 +84,10 @@ function fustring:erase(a, b)
     if(self.data[a] == nil) then return nil; end
     
     if(b ~= nil) then
-        if(self.data[b] == nil or a > b) then return nil; end
+        if((self.data[b] == nil) or (a > b)) then return nil; end
         
         for i = a, b do
-            table.remove(self.data, i);
+            table.remove(self.data, a);
         end
         self.length = self.length - (b - a + 1);
         
@@ -89,17 +95,27 @@ function fustring:erase(a, b)
 end
 
 function fustring:insert(str, index)
-  
+    if(type(str) == "number") then
+          if((___ustring.CheckUnicode(str)) and (self.data[index] ~= nil)) then
+              table.insert(self.data, index, str)
+              self.length = self.length + 1;
+              return true;
+          end
+          return nil;
+    elseif(type(str) == "string") then
+          str = ustring(str);
+    end
+    if(str.length == 0) then return true; end
+    for i = str.length, 1, -1 do
+        table.insert(self.data, index, str.data[i]);
+    end
+    return true;
 end
 
 function fustring:resize(size)
-    if( (type(size) ~= "number") or ((math.ceil(size)) ~= size) or size < 0) then
-        return nil;
-    end
-    
+
+    if(___ustring.CheckN(size) == false) then return nil; end
     if(size == 0) then self:clear();return true; end
-    
-    
     
     if(size < self.length) then 
         for i = self.length, size + 1, -1 do
@@ -121,11 +137,52 @@ function fustring:resize(size)
 end
 
 function fustring:find(str, a, b)
-
+    if(type(str) == "string") then
+        str = ustring(str);
+    end
+    if(
+        (str.length > self.length) or
+        (str.length == 0)
+        )then 
+        return nil;
+    end
+    local e = self.length - str.length;
+    for i = 1, e do
+        local f = true;
+        for j = 1, str.length do
+            if(str.data[j] ~= self.data[i + j - 1]) then 
+                f = false;
+                break;
+            end
+        end
+        if(f) then
+            return i, i + str.length - 1;
+        end
+    end
+    return nil;
 end
 
 function fustring:sub(a, b)
-  
+    if(a < 0) then a = self.length + a + 1; end
+    if(b < 0) then b = self.length + b + 1; end
+    
+    if(
+       (self.data[a] == nil) or 
+       (self.data[b] == nil) or
+       (a > b)) then
+        return nil;
+    end
+    
+    local res = ustring();
+    res.getchar = self.getchar;
+    
+    for i = a, b do
+        table.insert(res.data, self.data[i]);
+    end
+    
+    res.length = b - a + 1;
+    
+    return res;
 end
 
 function fustring:get(index)
@@ -151,7 +208,7 @@ function fustring:set(index, value)
 end
 
 function fustring:get_str()
-    if(self.isempty) then return "" end;
+    if(self:isempty()) then return "" end;
     local res = {};
     for k, v in pairs(self.data) do
         res[k] = string.uchar(v);
@@ -180,22 +237,27 @@ function fustring:concat(b)
     for k, v in pairs(b.data) do
         table.insert(res.data, v)
     end
-    if(res.length ~= 0) then res.isempty = false; end;
+
     return res;
 end
 
 function fustring:equal(b)
     if(self.length ~= b.length) then return false; end
     
-    local i = 1;
-    while(
-          (i <= self.length) and 
-          (self.data[i] == b.data[i])) do 
-        i = i + 1; 
+    for k, v in pairs(self.data) do
+        if(v ~= b.data[k]) then 
+            return false;
+        end
     end
-    if(i > self.length) then return true; end
+    
+    return true;
+end
+
+function fustring:isempty()
+    if(self.length == 0) then
+        return true;
+    end
     return false;
-  
 end
 
 
@@ -204,7 +266,6 @@ function fustring:copy() -- copy constructor
     for k, v in pairs(self.data) do
         table.insert(res.data, v);
     end
-    res.isempty = self.isempty;
     res.getchar = self.getchar;
     res.length = self.length;
     
@@ -218,6 +279,13 @@ ___ustring.MN = {["Flag1"] = 0x80, ["Flag2"] = 0xC0, ["Flag3"] = 0xE0};
    U+0080 ~ U+07FF use Flag2
    U+0800 ~ U+FFFF use Flag3
 ]]--
+
+function ___ustring.CheckN(n)
+    if( (type(n) ~= "number") or ((math.ceil(n)) ~= n) or n < 0) then
+        return false;
+    end
+    return true;
+end
 
 function ___ustring.checkUnicode(u)
     if((type(u) ~= "number") or
@@ -249,7 +317,7 @@ function ___ustring.Mb2UTF8t(mbstr)
         end
 
     local res = {};
-    local index, bytes= 1, #mbstr;
+    local index, bytes = 1, #mbstr;
     local tmp_byte;
 
     while(index <= bytes) do
