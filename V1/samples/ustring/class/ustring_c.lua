@@ -114,7 +114,7 @@ end
 
 function fustring:resize(size)
 
-    if(___ustring.CheckN(size) == false) then return nil; end
+    if(___ustring.checkN(size) == false) then return nil; end
     if(size == 0) then self:clear();return true; end
     
     if(size < self.length) then 

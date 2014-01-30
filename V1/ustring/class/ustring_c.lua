@@ -96,7 +96,7 @@ end
 
 function fustring:insert(str, index)
     if(type(str) == "number") then
-          if((___ustring.checkUnicode(str)) and (self.data[index] ~= nil)) then
+          if((___ustring.CheckUnicode(str)) and (self.data[index] ~= nil)) then
               table.insert(self.data, index, str)
               self.length = self.length + 1;
               return true;
