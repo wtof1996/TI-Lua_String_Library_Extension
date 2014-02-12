@@ -17,30 +17,95 @@
    This lib provides a UTF8-supported string class for dealing with UTF8 string.
    You can just use this class like the original Lua string.And this class supports
    random access.
+   The index is numbered from 1.
    
    operator:
-        [] read/write a index
+        [] access/assign a index
         .. concat
         == equal
         tostring
-   public member:
-        ustring(), ustring(<string>), ustring(<unicode table>)
-          The construct function
         
-        ustring:assign(<string>), ustring:assign(<unicode table>)
-          Assign content to the string
-        ustring:clear()
-          Clear the content of the string
-        ustring:concat(<ustring>), ustring:concat(<string>), ustring:concat(<number>)
-          Concat two string.If input is a number, the number will be convert into a string.
-          The operator ".." is overloaded from this function.
-        ustring:copy()
-          The copy constructor, return a copy form the string.
-        ustring:erase(a, [b])
-          Erases part of the string, reducing its length.
-          If b is not specificed, erase the character position at a; or erases the sequence of characters in the range [a, b].
-        ustring:find(str)
-          Find content in the string.Time complexity O(mn).
+   public member:
+      
+      member variables:
+          P.S:It't hard to implemente the read-only member, so BE CAREFUL when you use the "data" and "length" member.
+          
+          ustring.data
+              An array that contains the sequence of characters that make up the value of the string object.
+              Please DO NOT modify or overwrite this member!You should use the member functions to do the work.
+          
+          ustring.length
+              The length of the string(i.e. the number of characters).
+              Please DO NOT modify or overwrite this member!You should use the member functions to do the work.
+          
+          ustring.getchar
+              A boolean value stands for the return value type of ustring.get and the "[]" operator
+             (only for the indexing access).If it is true, it will return a character, or it will return a Unicode number.
+             The default value is false.
+      
+      member functions:
+          
+          ustring(), ustring(<string>), ustring(<unicode table>)
+            The construct function.
+ 
+          ustring:assign(<string>), ustring:assign(<unicode table>)
+            Assign content to the string object.
+          
+          ustring:clear()
+            Clear the content of the string object.
+          
+          ustring:concat(<ustring>), ustring:concat(<string>), ustring:concat(<number>)
+            Concat two string object or string.If input is a number, the number will be convert into a string object.
+            The operator ".." is overloaded from this function.
+          
+          ustring:copy()
+            The copy constructor, return a copy form the string object.
+          
+          ustring:erase(a, [b])
+            Erases part of the string object, reducing its length.
+            If b is not specificed, erase the character position at position a; or erases the sequence 
+            of characters in the range [a, b].
+            
+          ustring:equal(b)
+            Test if the string object is equal to string object b.
+            The operator "==" is overloaded from this function.
+            
+          ustring:find(str)
+            Find content str in the string object. If it finds a match,returns the first index of str where this occurrence 
+            starts and ends;otherwise, it returns nil. This uses "Naive string search algorithm", so the asymptotic time complexity is O(mn).
+          
+          ustring:get(index)
+            Get a character form the string object.The return value is depend on ustring.getchar.
+            The indexing access operator "[]" overloaded from this function.
+        
+          ustring:get_str()
+            Returns a Lua orginal string in UTF8 encode which contains a sequence of characters 
+            that make up the value of the string object.
+        
+          ustring:insert(str, index)
+            Inserts additional characters into the string object before the character indicated by index.
+        
+          ustring:isempty()
+            Returns whether the string is empty (i.e. whether its length is 0).
+        
+          ustring.push_back(value)
+            Appends Unicode number value to the end of the string, increasing its length by one.
+        
+          ustring:resize(n, [value])
+            Resizes the string to a length of n characters.
+
+            If n is smaller than the current string length, the current value is shortened to its
+            first n character, removing the characters beyond the nth.
+
+            If n is greater than the current string length, the current content is extended by inserting 
+            at the end as many characters as needed to reach a size of n.If the Unicode number "value" is specified, the new elements
+            are initialized as copies of value, otherwise, they are U+0000.
+          
+          ustring:sub(a, b)
+            Returns the substring object that starts at a and continues until b.
+            
+          ustring:set(index, value)
+            Set the character indicated by index to value.The value must be a Unicode number.
 ]]--
 
 ustring = class();
@@ -59,7 +124,7 @@ function ustring:init(init_data)
     t.__tostring = fustring.get_str;
     
     
-    --copy the function member from fustring
+    --copy the function member from fustring in order to avoid some problems of metatable
     for k, v in pairs(fustring) do
         self[k] = v;
     end
@@ -134,6 +199,18 @@ function fustring:copy() -- copy constructor
     return res;
 end
 
+function fustring:equal(b)
+    if(self.length ~= b.length) then return false; end
+    
+    for k, v in pairs(self.data) do
+        if(v ~= b.data[k]) then 
+            return false;
+        end
+    end
+    
+    return true;
+end
+
 function fustring:erase(a, b)
     if(self.data[a] == nil) then return nil; end
     
@@ -146,6 +223,7 @@ function fustring:erase(a, b)
         self.length = self.length - (b - a + 1);
         
     end
+    
 end
 
 function fustring:find(str)
@@ -229,25 +307,30 @@ function fustring:push_back(value)
     
 end
 
-function fustring:resize(size)
+function fustring:resize(n, value)
 
-    if(___ustring.checkN(size) == false) then return nil; end
-    if(size == 0) then self:clear();return true; end
+    if(___ustring.checkN(n) == false) then return nil; end
+    if(n == 0) then self:clear();return true; end
+    if(value ~= nil) then
+        if(___ustring.checkUnicode(value) == false) then return nil; end
+    else
+        value = 0;
+    end
     
-    if(size < self.length) then 
-        for i = self.length, size + 1, -1 do
+    if(n < self.length) then 
+        for i = self.length, n + 1, -1 do
             table.remove(self.data);
         end
-        self.length = size;
+        self.length = n;
         collectgarbage();
         return true;
     end
    
-    for i = self.length + 1, size do
-        table.insert(self.data, 0);
+    for i = self.length + 1, n do
+        table.insert(self.data, value);
     end
     
-    self.length = size;
+    self.length = n;
     
     return true;
     
@@ -289,28 +372,17 @@ function fustring:set(index, value)
     self.data[index] = value;
 end
 
-function fustring:equal(b)
-    if(self.length ~= b.length) then return false; end
-    
-    for k, v in pairs(self.data) do
-        if(v ~= b.data[k]) then 
-            return false;
-        end
-    end
-    
-    return true;
-end
-
 --private member, which begin with 3 underscores
 ___ustring = {};
 ___ustring.MN = {["Flag1"] = 0x80, ["Flag2"] = 0xC0, ["Flag3"] = 0xE0};
---[[Magic Number, this is used to recongize each bytes.
+--[[
+   Magic Number, this is used to recongize each bytes.
    U+0000 ~ U+007F use Flag1
    U+0080 ~ U+07FF use Flag2
    U+0800 ~ U+FFFF use Flag3
 ]]--
 
-function ___ustring.CheckN(n)
+function ___ustring.checkN(n)
     if( (type(n) ~= "number") or ((math.ceil(n)) ~= n) or n < 0) then
         return false;
     end

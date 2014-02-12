@@ -39,7 +39,8 @@
 
 __ustring = {};
 __ustring.MN = {["Flag1"] = 0x80, ["Flag2"] = 0xC0, ["Flag3"] = 0xE0};
---[[Magic Number, this is used to recongize each bytes.
+--[[
+   Magic Number, this is used to recongize each bytes.
    U+0000 ~ U+007F use Flag1
    U+0080 ~ U+07FF use Flag2
    U+0800 ~ U+FFFF use Flag3

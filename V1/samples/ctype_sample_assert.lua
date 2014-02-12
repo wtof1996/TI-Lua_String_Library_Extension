@@ -6,7 +6,7 @@
     This is a sample which shows how to use ctype_assert lib.
     In this sample, user only can input digits to display on the screen.
     P.S:This sample only can run under API2.0 or higher.
-	You'd better use this with iLua.
+	  You'd better use this with iLua.
 ]]
 
 platform.apiLevel = '2.0'

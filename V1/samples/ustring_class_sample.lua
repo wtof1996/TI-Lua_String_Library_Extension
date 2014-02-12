@@ -41,6 +41,8 @@ print(c);
 a:insert(tostring(c), 2);
 print(a);
 
+c:resize(10, 23545);
+print(c);
 c:clear();
 
 b:assign("wtof1996");

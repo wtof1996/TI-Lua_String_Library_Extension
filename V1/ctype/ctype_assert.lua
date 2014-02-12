@@ -29,7 +29,7 @@
     When res is nil,it means an error occured,the err will contain a short discription.Otherwise the err will be nil.
     Suggestion:If you have an error handler(by platform.registerErrorHandler), please use assert function like this:
         test_result = assert(isnumber("1"));
-    If there's something wrong it will throw an error, then you can deal it in your handler.
+    If there's something wrong it will throw an error, then you can deal it in your handler(required API2.0 or higher).
 
     ASCII Table:
 
