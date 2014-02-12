@@ -46,7 +46,7 @@ assert版和非assert版均具有以下函数/异常(函数功能均与C语言�
 
 对于测试函数来说，res可以是true，false或者nil(此时表示出现错误)，而对于转换函数来说，res可以是转换后的结果(注意转换函数总是返回数值而不是对应的字符)或者是nil(此时表示出现错误)。两种函数的err含义均相同，可以是nil(无错)或者是对应的错误信息。
 
-此版本的使用可参考/samples/ctype_sample_non_assert.lua
+此版本的使用可参考样例/samples/ctype_sample_non_assert.lua
 
 ###assert版###
 
@@ -57,7 +57,7 @@ assert版和非assert版均具有以下函数/异常(函数功能均与C语言�
 如果你的TI-Lua脚本中设计了错误处理函数(即设置了platform.registerErrorHandler)，强烈建议配合assert函数来使用本库的函数，比如说这样:
 
 	test_result = assert(isnumber("1"));
-如果出现异常那么assert会自动引发一个错误(不需要你自己去检查err了)，然后你就可以通过错误处理函数作进一步处理(可参考/samples/ctype_sample_assert.lua)。
+如果出现异常那么assert会自动引发一个错误(不需要你自己去检查err了)，然后你就可以通过错误处理函数作进一步处理(可参考样例/samples/ctype_sample_assert.lua)。
 
 **P.S:此功能需要API 2.0或更高版本**
 
