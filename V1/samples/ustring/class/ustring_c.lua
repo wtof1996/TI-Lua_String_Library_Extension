@@ -15,7 +15,7 @@
    limitations under the License.
    
    This lib provides a UTF8-supported string class for dealing with UTF8 string.
-   You can just use this class like the original Lua string.And this class supports
+   You can just use this class like the original Lua string. And this class supports
    random access.
    The index is numbered from 1.
    
@@ -28,19 +28,19 @@
    public member:
       
       member variables:
-          P.S:It't hard to implemente the read-only member, so BE CAREFUL when you use the "data" and "length" member.
+          P.S: It's hard to implement the read-only member, so BE CAREFUL when you use the "data" and "length" member.
           
           ustring.data
               An array that contains the sequence of characters that make up the value of the string object.
-              Please DO NOT modify or overwrite this member!You should use the member functions to do the work.
+              Please DO NOT modify or overwrite this member! You should use the member functions to do the work.
           
           ustring.length
-              The length of the string(i.e. the number of characters).
-              Please DO NOT modify or overwrite this member!You should use the member functions to do the work.
+              The length of the string (i.e. the number of characters).
+              Please DO NOT modify or overwrite this member! You should use the member functions to do the work.
           
           ustring.getchar
-              A boolean value stands for the return value type of ustring.get and the "[]" operator
-             (only for the indexing access).If it is true, it will return a character, or it will return a Unicode number.
+              A boolean value indicates the return value type of ustring.get and the "[]" operator
+             (only for the indexing access). If it is true, it will return a character, or it will return a Unicode code.
              The default value is false.
       
       member functions:
@@ -63,7 +63,7 @@
           
           ustring:erase(a, [b])
             Erases part of the string object, reducing its length.
-            If b is not specificed, erase the character position at position a; or erases the sequence 
+            If b is not specificed, the character at position a will be erased; Otherwise this erases the sequence 
             of characters in the range [a, b].
             
           ustring:equal(b)
@@ -71,11 +71,11 @@
             The operator "==" is overloaded from this function.
             
           ustring:find(str)
-            Find content str in the string object. If it finds a match,returns the first index of str where this occurrence 
-            starts and ends;otherwise, it returns nil. This uses "Naive string search algorithm", so the asymptotic time complexity is O(mn).
+            Find content str in the string object. If it finds a match, the function returns the first index of str where this occurrence 
+            starts and ends; otherwise, it returns nil. This uses "Naive string search algorithm", so the asymptotic time complexity is O(mn).
           
           ustring:get(index)
-            Get a character form the string object.The return value is depend on ustring.getchar.
+            Get a character form the string object. The return value depends on ustring.getchar.
             The indexing access operator "[]" overloaded from this function.
         
           ustring:get_str()
@@ -89,7 +89,7 @@
             Returns whether the string is empty (i.e. whether its length is 0).
         
           ustring.push_back(value)
-            Appends Unicode number value to the end of the string, increasing its length by one.
+            Appends Unicode code value to the end of the string, increasing its length by one.
         
           ustring:resize(n, [value])
             Resizes the string to a length of n characters.
@@ -98,14 +98,14 @@
             first n character, removing the characters beyond the nth.
 
             If n is greater than the current string length, the current content is extended by inserting 
-            at the end as many characters as needed to reach a size of n.If the Unicode number "value" is specified, the new elements
+            at the end as many characters as needed to reach a size of n.If the Unicode code "value" is specified, the new elements
             are initialized as copies of value, otherwise, they are U+0000.
           
           ustring:sub(a, b)
             Returns the substring object that starts at a and continues until b.
             
           ustring:set(index, value)
-            Set the character indicated by index to value.The value must be a Unicode number.
+            Set the character indicated by index to value.The value must be a Unicode code.
 ]]--
 
 ustring = class();

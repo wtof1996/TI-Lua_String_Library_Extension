@@ -17,10 +17,10 @@
     Notice: This Lib ONLY ACCEPT SINGLE ASCII CHAR!(either num or a string which contains one character is ok.)
 
     Each functions returns two value: res & err.
-    For testing functions, res can be true, false or nil.For converting functions, res can be result or nil.
-    When res is nil,it means an error occured,the err will contain a short discription.Otherwise the err will be nil.
+    For testing functions, res can be true, false or nil. For converting functions, res can be result or nil.
+    The res will be nil if an error has occured, and the err will contain a short discription. Otherwise the err will be nil.
 
-    If you want to use assert with this lib,please use "ctype_assert.lua"
+    If you want to use assert with this lib, please use "ctype_assert.lua"
 
 
     ASCII Table:

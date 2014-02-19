@@ -17,19 +17,19 @@
     Notice: This Lib ONLY ACCEPT SINGLE ASCII CHAR!(either num or a string which contains one character is ok.)
 
     Each functions returns two value: res & err.
-    For testing functions, res can be 1(true), 0(false) or nil.For converting functions, res can be result or nil(if input is invalid).
-    P.S:I use the numeric instead of the Boolean was because wehn you return a value to assert , it would throw an error.
-        If you still want to use Boolean, just use ctype["flase"] instead of false, ctype["true"] instead of true.Like this
+    For testing functions, res can be 1(true), 0(false) or nil. For converting functions, res can be result or nil(if input is invalid).
+    P.S: I use the numeric instead of the Boolean was because when you return a value to assert , it would throw an error.
+        If you still prefer Boolean, just use ctype["false"] instead of false, ctype["true"] instead of true. For example:
 
         local res = assert(ctype.isalpha("a"));
         if(res == ctype["true"]) then
          ...
         end
 
-    When res is nil,it means an error occured,the err will contain a short discription.Otherwise the err will be nil.
-    Suggestion:If you have an error handler(by platform.registerErrorHandler), please use assert function like this:
+    When res is nil, it means an error has occured, and the err will contain a short discription. Otherwise the err will be nil.
+    Tip: If you have an error handler(by platform.registerErrorHandler), please use assert function like this:
         test_result = assert(isnumber("1"));
-    If there's something wrong it will throw an error, then you can deal it in your handler.
+    If there's something wrong it will throw an error, then you can deal it in your handler(required API 2.0 or higher).
 
     ASCII Table:
 

@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
-   NOTE:This Lib is contains some basic functions to deal with UTF8 string in TI-Lua.
+   NOTE:This Lib is contains some basic functions that deals with UTF8 string in TI-Lua.
         If you want to use the Lua string-like class, please use the "ustring class".`
         Because of the limition of string.uchar, this Lib only support U+0000 ~ U+FFFF(0~65535).
         So the maximum of bytes in sequence is 3.
@@ -32,7 +32,7 @@
         string.uRealPos(ustr, pos)
             Return the real position(in UTF8) of a byte.
         string.MbtoUTF8table(mbstr)
-            Return a table which contains the code of each UTF8 characters.
+            Return a table which contains the Unicode code of each UTF8 characters.
         string.UTF8tabletoMb(UTF8table)
             Return a UTF8 string from a table which contains the code of each UTF8 characters.
 ]]--
