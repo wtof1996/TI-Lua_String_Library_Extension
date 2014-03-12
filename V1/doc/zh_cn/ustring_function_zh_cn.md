@@ -5,7 +5,7 @@
 
 此库提供了一些基本函数，用于增强TI-Lua处理UTF8字符串的能力。
 
-如果需要大量的比较，插入，连接，查找等操作或者希望使用类C++的字符串类，建议使用ustring class库。
+如果需要大量的比较，插入，连接，查找，随机访问等操作或者希望使用类似C++中string的字符串类，建议使用ustring class库。
 
 此库所有函数均支持利用assert进行错误处理。
 
@@ -43,9 +43,13 @@
 
 ##使用说明##
 
-**P.S:由于TI-LUA的限制，此库仅能处理U+0000~U+FFFF范围内的字符，所以一个UTF8字符最多需要3字节的空间。**
+**P.S:**
 
-###函数功能###
+**1.由于TI-LUA的限制，此库仅能处理U+0000~U+FFFF范围内的字符，所以一个UTF8字符最多需要3字节的空间。**
+
+**2.使用此库时可以只选择性使用部分函数的代码，但是以两个下划线开头的内部成员请务必保留。**
+
+###函数说明###
 
 ####string.ubyte(uchar)####
 
@@ -189,10 +193,12 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 
-P.S：若使用本库请在你的源代码中保留上述信息或在关于信息中注明上述信息(若太长可做简单标注，但要求能体现作者、名称、许可等主要信息，如:"使用了wtof1996 编写的TI-Lua String Library Extension库，此库按 Apache 2.0许可进行授权")
+P.S：若使用本库请在你的源代码中保留上述信息或在关于信息中注明上述信息(若太长可做简单标注，但要求能体现作者、名称、许可等主要信息，如:"使用了wtof1996 编写的TI-Lua String Library Extension库(简写为SLE也可以)，此库按 Apache 2.0许可进行授权")
 	
 
 ##作者信息##
+
+版本:V1.00
 
 设计&开发:wtof1996
 

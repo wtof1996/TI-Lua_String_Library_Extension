@@ -40,6 +40,7 @@ assert版和非assert版均具有以下函数/异常(函数功能均与C语言�
 
 ##使用说明##
 
+**P.S:使用此库时可以只选择性使用部分函数的代码，但是内部成员(注释"Public function"之前的部分)请务必保留。**
 ###非assert版###
 
 每个函数均会返回2个值，第一个为结果(下文简称res)，第二个为错误信息(下文简称err)。
@@ -88,10 +89,12 @@ P.S:使用数字代替true/false是因为如果通过assert调用函数返回的
     See the License for the specific language governing permissions and
     limitations under the License.
 
-P.S：若使用本库请在你的源代码中保留上述信息或在关于信息中注明上述信息(若太长可做简单标注，但要求能体现作者、名称、许可等主要信息，如:"使用了wtof1996 编写的TI-Lua String Library Extension库，此库按 Apache 2.0许可进行授权")
+P.S：若使用本库请在你的源代码中保留上述信息或在关于信息中注明上述信息(若太长可做简单标注，但要求能体现作者、名称、许可等主要信息，如:"使用了wtof1996 编写的TI-Lua String Library Extension库(简写为SLE也可以)，此库按 Apache 2.0许可进行授权")
 	
 
 ##作者信息##
+
+版本:V1.00
 
 设计&开发:wtof1996
 

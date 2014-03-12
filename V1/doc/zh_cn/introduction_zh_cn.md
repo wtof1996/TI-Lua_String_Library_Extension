@@ -16,7 +16,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 
-P.S：若使用本库请在你的源代码中保留上述信息或在关于信息中注明上述信息(若太长可做简单标注，但要求能体现作者、名称、许可等主要信息，如:"使用了wtof1996 编写的TI-Lua String Library Extension库，此库按 Apache 2.0许可进行授权")
+P.S：若使用本库请在你的源代码中保留上述信息或在关于信息中注明上述信息(若太长可做简单标注，但要求能体现作者、名称、许可等主要信息，如:"使用了wtof1996 编写的TI-Lua String Library Extension库(简写为SLE也可以)，此库按 Apache 2.0许可进行授权")
 
 ##使用说明##
 请参见每个库的使用说明
@@ -24,6 +24,8 @@ P.S：若使用本库请在你的源代码中保留上述信息或在关于信�
 P.S:若无明确说明，所有库均支持API 1.0或更高版本
 
 ##作者信息##
+
+版本:V1.00
 
 设计&开发:wtof1996
 
