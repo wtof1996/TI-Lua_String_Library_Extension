@@ -7,7 +7,57 @@
 出于兼容性的考虑，这个类目前并不提供异常机制。
 
 ##成员列表##
-	
+
+###操作符###
+        [] 读取/修改指定位置的字符(位置从1开始计数)
+        .. 连接两个ustring对象
+        == 比较两个ustring对象是否相等
+        tostring	
+        
+###公共成员###
+      
+####成员变量####
+          ustring.data
+          ustring.length
+          ustring.getchar
+      
+####成员函数####
+          
+          ustring(), ustring(<string>), ustring(<unicode table>)
+ 
+          ustring:assign(<string>), ustring:assign(<unicode table>)
+
+          ustring:clear()
+          
+          ustring:concat(<ustring>), ustring:concat(<string>), ustring:concat(<number>)
+
+          ustring:copy()
+          
+          ustring:erase(a, [b])
+
+          ustring:equal(b)
+
+          ustring:find(str)
+
+          ustring:get(index)
+        
+          ustring:get_str()
+
+          ustring:insert(str, index)
+
+          ustring:isempty()
+        
+          ustring.push_back(value)
+
+          ustring:resize(n, [value])
+          
+          ustring:sub(a, b)
+            
+          ustring:set(index, value)
+
+
+##使用说明##
+
 ###操作符###
       	[] 
         .. 
@@ -35,53 +85,56 @@
       
 ####成员函数####
           
-          ustring(), ustring(<string>), ustring(<unicode table>)
+#####构造函数#####
+*ustring(), ustring(/string/), ustring(/unicode table/)*
+
             The construct function.
  
-          ustring:assign(<string>), ustring:assign(<unicode table>)
+#####ustring:assign(<string>), ustring:assign(<unicode table>)#####
             Assign content to the string object.
-          
-          ustring:clear()
+
+#####ustring:clear()#####
             Clear the content of the string object.
           
-          ustring:concat(<ustring>), ustring:concat(<string>), ustring:concat(<number>)
+#####ustring:concat(<ustring>), ustring:concat(<string>), ustring:concat(<number>)#####
+
             Concat two string object or string.If input is a number, the number will be convert into a string object.
             The operator ".." is overloaded from this function.
           
-          ustring:copy()
+#####ustring:copy()#####
             The copy constructor, return a copy form the string object.
           
-          ustring:erase(a, [b])
+#####ustring:erase(a, [b])#####
             Erases part of the string object, reducing its length.
             If b is not specificed, the character at position a will be erased; Otherwise this erases the sequence 
             of characters in the range [a, b].
             
-          ustring:equal(b)
+#####ustring:equal(b)#####
             Test if the string object is equal to string object b.
             The operator "==" is overloaded from this function.
             
-          ustring:find(str)
+#####ustring:find(str)#####
             Find content str in the string object. If it finds a match, the function returns the first index of str where this occurrence 
             starts and ends; otherwise, it returns nil. This uses "Naive string search algorithm", so the asymptotic time complexity is O(mn).
           
-          ustring:get(index)
+#####ustring:get(index)#####
             Get a character form the string object. The return value depends on ustring.getchar.
             The indexing access operator "[]" overloaded from this function.
         
-          ustring:get_str()
+#####ustring:get_str()#####
             Returns a Lua orginal string in UTF8 encode which contains a sequence of characters 
             that make up the value of the string object.
         
-          ustring:insert(str, index)
+#####ustring:insert(str, index)#####
             Inserts additional characters into the string object before the character indicated by index.
         
-          ustring:isempty()
+#####ustring:isempty()#####
             Returns whether the string is empty (i.e. whether its length is 0).
         
-          ustring.push_back(value)
+#####ustring.push_back(value)#####
             Appends Unicode code value to the end of the string, increasing its length by one.
         
-          ustring:resize(n, [value])
+#####ustring:resize(n, [value])#####
             Resizes the string to a length of n characters.
 
             If n is smaller than the current string length, the current value is shortened to its
@@ -91,12 +144,11 @@
             at the end as many characters as needed to reach a size of n.If the Unicode code "value" is specified, the new elements
             are initialized as copies of value, otherwise, they are U+0000.
           
-          ustring:sub(a, b)
+#####ustring:sub(a, b)#####
             Returns the substring object that starts at a and continues until b.
             
-          ustring:set(index, value)
+#####ustring:set(index, value)#####
             Set the character indicated by index to value.The value must be a Unicode code.
-##使用说明##
 
 ##版权信息##
 
