@@ -9,31 +9,44 @@
 ##成员列表##
 
 ###操作符###
-        [] 读取/修改指定位置的字符(位置从1开始计数)
-        .. 连接两个ustring对象
-        == 比较两个ustring对象是否相等
+        [] 
+			读取/修改指定位置的字符(位置从1开始计数)
+        .. 	
+			连接两个ustring对象
+        ==    
+			比较两个ustring对象是否相等
         tostring	
+			tostring转换操作符，即可直接显式/隐式(e.g:用print直接输出)使用tostring转换成Lua内置的字符串类型
         
 ###公共成员###
       
 ####成员变量####
           ustring.data
+				一个存储了ustring对象中所有字符的数组
           ustring.length
+				ustring对象的长度(只能为从0开始的正整数，0表示当前ustring对象内容为空)
           ustring.getchar
+				设置使用[]操作符或ustring.get返回值的类型是返回Unicode代码对应的字符还是直接返回Unicode代码
       
 ####成员函数####
           
           ustring(), ustring(<string>), ustring(<unicode table>)
+				构造函数
  
           ustring:assign(<string>), ustring:assign(<unicode table>)
+				重设ustring对象的内容
 
           ustring:clear()
-          
+          		清空一个ustring对象
+
           ustring:concat(<ustring>), ustring:concat(<string>), ustring:concat(<number>)
+				连接两个ustring或者连接一个ustring对象与Lua内置的字符串或数字
 
           ustring:copy()
-          
+          		复制构造函数，通常复制ustring对象时应使用此函数而不是直接使用赋值操作以避免额外的影响
+
           ustring:erase(a, [b])
+				删除指定位置或范围内的字符				
 
           ustring:equal(b)
 
