@@ -26,7 +26,7 @@
           ustring.length
 				ustring对象的长度(只能为从0开始的正整数，0表示当前ustring对象内容为空)
           ustring.getchar
-				设置使用[]操作符或ustring.get返回值的类型是返回Unicode代码对应的字符还是直接返回Unicode代码
+				Boolean类型，设置使用[]操作符或ustring.get返回值的类型是返回Unicode代码对应的字符还是直接返回Unicode代码
       
 ####成员函数####
           
@@ -37,7 +37,7 @@
 				重设ustring对象的内容
 
           ustring:clear()
-          		清空一个ustring对象
+          		清空ustring对象
 
           ustring:concat(<ustring>), ustring:concat(<string>), ustring:concat(<number>)
 				连接两个ustring或者连接一个ustring对象与Lua内置的字符串或数字
@@ -49,49 +49,95 @@
 				删除指定位置或范围内的字符				
 
           ustring:equal(b)
+				比较两个ustring对象是否相等
 
           ustring:find(str)
+				使用朴素字符串查找算法搜索str首次出现的位置
 
           ustring:get(index)
+				返回index位置的字符的Unicode代码或字符本身(视ustring.getchar的设置情况而定)
         
           ustring:get_str()
+				将ustring对象转换为Lua内置字符串类型
 
           ustring:insert(str, index)
+				在当前ustring对象的index位置插入str
 
           ustring:isempty()
+				测试ustring对象是否为空
         
           ustring.push_back(value)
+				将Unicode代码为value的字符添加到ustring对象末尾
 
           ustring:resize(n, [value])
+				重设ustring对象的大小
           
           ustring:sub(a, b)
+				截取ustring对象从位置a到b的部分
             
           ustring:set(index, value)
+				设置index位置的字符Unicode代码为value
 
 
 ##使用说明##
 
+**P.S:**
+
+**1.由于TI-LUA的限制，此库仅能处理U+0000~U+FFFF范围内的字符，所以一个UTF8字符最多需要3字节的空间。**
+
+**2.由于此类库设计上是从整体上设计的，因此建议保留全部代码。但是从设计时就最大程度上降低了耦合性，因此如的确需要，请酌情精简公共成员中的某些成员函数，切勿精简任何私有成员(注释"private member, which begin with 3 underscores"后的部分)！！！**
+
+**3.由于实现只读成员十分困难，因此在使用ustring.data或ustring.length成员时请务必小心，避免直接对其进行修改。**
+
 ###操作符###
-      	[] 
-        .. 
-        == 
-        tostring
+
+####[index]####
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
+
+####a .. b####
+* **形参列表:**
+* **返回值列表:**
+* **e.g:** 
+
+####a == b####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
+
+####tostring####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
         
 ###公共成员###
       
 ####成员变量####
 
-**P.S: It's hard to implement the read-only member, so BE CAREFUL when you use the "data" and "length" member.**
-          
 #####ustring.data#####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
               An array that contains the sequence of characters that make up the value of the string object.
               Please DO NOT modify or overwrite this member! You should use the member functions to do the work.
           
 #####ustring.length#####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
               The length of the string (i.e. the number of characters).
               Please DO NOT modify or overwrite this member! You should use the member functions to do the work.
           
 #####ustring.getchar#####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
               A boolean value indicates the return value type of ustring.get and the "[]" operator
              (only for the indexing access). If it is true, it will return a character, or it will return a Unicode code.
              The default value is false.
@@ -99,55 +145,110 @@
 ####成员函数####
           
 #####构造函数#####
-*ustring(), ustring(/string/), ustring(/unicode table/)*
 
+#####ustring(), ustring(/string/), ustring(/unicode table/)#####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
             The construct function.
  
 #####ustring:assign(<string>), ustring:assign(<unicode table>)#####
-            Assign content to the string object.
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**    
+			Assign content to the string object.
 
 #####ustring:clear()#####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
             Clear the content of the string object.
           
 #####ustring:concat(<ustring>), ustring:concat(<string>), ustring:concat(<number>)#####
 
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
             Concat two string object or string.If input is a number, the number will be convert into a string object.
             The operator ".." is overloaded from this function.
           
 #####ustring:copy()#####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
             The copy constructor, return a copy form the string object.
           
 #####ustring:erase(a, [b])#####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
             Erases part of the string object, reducing its length.
             If b is not specificed, the character at position a will be erased; Otherwise this erases the sequence 
             of characters in the range [a, b].
             
 #####ustring:equal(b)#####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
             Test if the string object is equal to string object b.
             The operator "==" is overloaded from this function.
             
 #####ustring:find(str)#####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
             Find content str in the string object. If it finds a match, the function returns the first index of str where this occurrence 
             starts and ends; otherwise, it returns nil. This uses "Naive string search algorithm", so the asymptotic time complexity is O(mn).
           
 #####ustring:get(index)#####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
             Get a character form the string object. The return value depends on ustring.getchar.
             The indexing access operator "[]" overloaded from this function.
         
 #####ustring:get_str()#####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
             Returns a Lua orginal string in UTF8 encode which contains a sequence of characters 
             that make up the value of the string object.
         
 #####ustring:insert(str, index)#####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
             Inserts additional characters into the string object before the character indicated by index.
         
 #####ustring:isempty()#####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
             Returns whether the string is empty (i.e. whether its length is 0).
         
 #####ustring.push_back(value)#####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
             Appends Unicode code value to the end of the string, increasing its length by one.
         
 #####ustring:resize(n, [value])#####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
             Resizes the string to a length of n characters.
 
             If n is smaller than the current string length, the current value is shortened to its
@@ -158,9 +259,17 @@
             are initialized as copies of value, otherwise, they are U+0000.
           
 #####ustring:sub(a, b)#####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
             Returns the substring object that starts at a and continues until b.
             
 #####ustring:set(index, value)#####
+
+* **形参列表:**
+* **返回值列表:**
+* **e.g:**
             Set the character indicated by index to value.The value must be a Unicode code.
 
 ##版权信息##
@@ -179,7 +288,9 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 
-P.S：若使用本库请在你的源代码中保留上述信息或在关于信息中注明上述信息(若太长可做简单标注，但要求能体现作者、名称、许可等主要信息，如:"使用了wtof1996 编写的TI-Lua String Library Extension库(简写为SLE也可以)，此库按 Apache 2.0许可进行授权")
+**P.S：若使用本库请在你的源代码中保留上述信息或在关于信息中注明上述信息(若太长可做简单标注，但要求能体现作者、名称、许可等主要信息，如:** 
+
+> "使用了wtof1996 编写的TI-Lua String Library Extension库(简写为SLE也可以)，此库按 Apache 2.0许可进行授权")
 	
 
 ##作者信息##
