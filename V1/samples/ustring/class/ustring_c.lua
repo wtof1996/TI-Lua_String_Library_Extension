@@ -200,6 +200,9 @@ function fustring:copy() -- copy constructor
 end
 
 function fustring:equal(b)
+    if(type(b) == "number") then b = tostring(b); end 
+    if(type(b) == "string") then b = ustring(b); end
+    
     if(self.length ~= b.length) then return false; end
     
     for k, v in pairs(self.data) do
