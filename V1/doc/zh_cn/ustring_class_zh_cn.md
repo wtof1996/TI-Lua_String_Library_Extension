@@ -24,7 +24,7 @@
           ustring.data
 				一个存储了ustring对象中所有字符的数组
           ustring.length
-				ustring对象的长度(只能为从0开始的正整数，0表示当前ustring对象内容为空)
+				ustring对象的长度(即Unicode字符的数量，只能为从0开始的正整数，0表示当前ustring对象内容为空)
           ustring.getchar
 				Boolean类型，设置使用[]操作符或ustring.get返回值的类型是返回Unicode代码对应的字符还是直接返回Unicode代码
       
@@ -166,28 +166,38 @@
 
 #####ustring.data#####
 
-* **形参列表:**
-* **返回值列表:**
-* **e.g:**
-              An array that contains the sequence of characters that make up the value of the string object.
-              Please DO NOT modify or overwrite this member! You should use the member functions to do the work.
+* **说明:**
+
+      一个存储了ustring对象中所有字符的数组，是整个ustring对象的基础，可以类比C中的char数组。
+
+	  **请不要直接修改此成员，而是通过ustring类的相关成员函数进行修改！**
           
 #####ustring.length#####
 
-* **形参列表:**
-* **返回值列表:**
-* **e.g:**
-              The length of the string (i.e. the number of characters).
-              Please DO NOT modify or overwrite this member! You should use the member functions to do the work.
+* **说明:**
+	
+	表示ustring对象的长度(即Unicode字符的数量，只能为从0开始的正整数，0表示当前ustring对象内容为空)。
+	
+	**使用此成员时请确保仅进行读取操作，任何对ustring对象长度的修改应该通过成员函数进行而不是直接修改此成员！**
           
 #####ustring.getchar#####
 
-* **形参列表:**
-* **返回值列表:**
+* **说明:**
+	
+	Boolean类型，设置使用[]操作符或ustring.get返回值的类型是返回Unicode代码对应的字符还是直接返回Unicode代码。
+	
+	此成员设置为true时表示返回字符，false表示返回Unicode代码。**默认为flase。**
 * **e.g:**
-              A boolean value indicates the return value type of ustring.get and the "[]" operator
-             (only for the indexing access). If it is true, it will return a character, or it will return a Unicode code.
-             The default value is false.
+
+> a = ustring("测试")
+> 
+> print(a[2])  
+> --输出 35797
+> 
+> a.getchar = true
+> 
+> print(a[2])  
+> --输出 试
       
 ####成员函数####
           
