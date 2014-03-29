@@ -46,7 +46,7 @@
           		复制构造函数，通常复制ustring对象时应使用此函数而不是直接使用赋值操作以避免额外的影响
 
           ustring:erase(a, [b])
-				删除指定位置或范围内的字符				
+				删除指定位置或范围内的字符	
 
           ustring:equal(b)
 				比较两个ustring对象是否相等
@@ -93,11 +93,9 @@
 
 ####a[index], a[index] = value####
 
-* **说明:**
+读取/修改a中位于index的字符**(位置从1开始计数)**。
 
-	读取/修改a中位于index的字符**(位置从1开始计数)**。
-	
-	本操作符实质上相当于调用了a:get(index)或a:set(index, value)。
+本操作符实质上相当于调用了a:get(index)或a:set(index, value)。
 
 * **e.g:**
 
@@ -108,12 +106,10 @@
 > --打印a中第一个字符(显示"27979"还是"测"视ustring.getchar的设置情况而定)
 
 ####a .. b####
-* **说明:**
 
-	连接两个ustring或者连接一个ustring对象与Lua内置的字符串或数字，如果a或b中有一个不是ustring对象那么会自动转换为ustring对象(number会先转换为string然后利用构造函数构造ustring对象)。**使用本操作符最终结果一定是ustring对象。**
-	
-	
-	本操作符实质上相当于调用了ustring.concat(a, b)。
+连接两个ustring或者连接一个ustring对象与Lua内置的字符串或数字，如果a或b中有一个不是ustring对象那么会自动转换为ustring对象(number会先转换为string然后利用构造函数构造ustring对象)。**使用本操作符最终结果一定是ustring对象。**
+
+本操作符实质上相当于调用了ustring.concat(a, b)。
 
 * **e.g:** 
  
@@ -128,11 +124,9 @@
 
 ####a == b####
 
-* **说明:**
-	
-	比较a和b是否相等。**需要注意的是，由于==操作符在比较系统内置类型时会先判断两边类型是否一致，因此本操作符仅能用于比较ustring对象。**
+比较a和b是否相等。**需要注意的是，由于==操作符在比较系统内置类型时会先判断两边类型是否一致，因此本操作符仅能用于比较ustring对象。**
 
-	本操作符实际上相当于调用a:equal(b)。
+本操作符实际上相当于调用了a:equal(b)。
 
 * **e.g:**
 
@@ -147,11 +141,9 @@
 
 ####tostring(a)####
 
-* **说明:**
+tostring转换操作符，即可直接显式/隐式使用tostring将ustring对象a转换成Lua内置的字符串类型
 
-	tostring转换操作符，即可直接显式/隐式使用tostring将ustring对象a转换成Lua内置的字符串类型
-	
-	此操作符等价于调用a:get_str()
+本操作符等价于调用了a:get_str()
 
 * **e.g:**
 
@@ -166,27 +158,19 @@
 
 #####ustring.data#####
 
-* **说明:**
-
-      一个存储了ustring对象中所有字符的数组，是整个ustring对象的基础，可以类比C中的char数组。
-
-	  **请不要直接修改此成员，而是通过ustring类的相关成员函数进行修改！**
+   一个存储了ustring对象中所有字符的数组，是整个ustring对象的基础，可以类比C中的char数组。
+**请不要直接修改此成员，而是通过ustring类的相关成员函数进行修改！**
           
 #####ustring.length#####
 
-* **说明:**
-	
-	表示ustring对象的长度(即Unicode字符的数量，只能为从0开始的正整数，0表示当前ustring对象内容为空)。
-	
-	**使用此成员时请确保仅进行读取操作，任何对ustring对象长度的修改应该通过成员函数进行而不是直接修改此成员！**
+表示ustring对象的长度(即Unicode字符的数量，只能为从0开始的正整数，0表示当前ustring对象内容为空)。
+**使用此成员时请确保仅进行读取操作，任何对ustring对象长度的修改应该通过成员函数进行而不是直接修改此成员！**
           
 #####ustring.getchar#####
 
-* **说明:**
-	
-	Boolean类型，设置使用[]操作符或ustring.get返回值的类型是返回Unicode代码对应的字符还是直接返回Unicode代码。
-	
-	此成员设置为true时表示返回字符，false表示返回Unicode代码。**默认为flase。**
+Boolean类型，设置使用[]操作符或ustring.get返回值的类型是返回Unicode代码对应的字符还是直接返回Unicode代码。
+此成员设置为true时表示返回字符，false表示返回Unicode代码。**默认为flase。**
+
 * **e.g:**
 
 > a = ustring("测试")
@@ -206,11 +190,34 @@
 #####ustring(), ustring(/string/), ustring(/unicode table/)#####
 
 * **形参列表:**
+		<nil> 	即形参为空，此时为默认构造函数，返回一个空的ustring对象
+		<string>即使用Lua内置字符串类型作为初值
+		<unicode table> 使用一个含有Unicode代码的Table作为初值
 * **返回值列表:**
+		 ustring		即构造好的ustring对象
+
+最基本的构造函数，用于构造ustring对象。
+默认构造函数将采用如下设置:
+> **self.data = {}**
+> **self.getchar = false**
+> **self.length = 0**
+
+若形参不为nil那么data和length会根据输入数据进行调整，**但是getchar成员仍然为false**。
+
 * **e.g:**
-            The construct function.
+
+> a = ustring()  
+> --空ustring对象
+> b = ustring("Hello World~")  
+> --内容为"Hello world~"的ustring对象
+> c = ustring({72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 126})
+> --等同于b
+> d = ustring("中文测试")  
+> --内容为"中文测试"的ustring对象
+> e = ustring({20013, 25991, 27979, 35797})
+> --等同于d
  
-#####ustring:assign(<string>), ustring:assign(<unicode table>)#####
+#####ustring:assign(/string/), ustring:assign(/unicode table/)#####
 
 * **形参列表:**
 * **返回值列表:**
@@ -347,7 +354,7 @@
 
 **P.S：若使用本库请在你的源代码中保留上述信息或在关于信息中注明上述信息(若太长可做简单标注，但要求能体现作者、名称、许可等主要信息，如:** 
 
-> "使用了wtof1996 编写的TI-Lua String Library Extension库(简写为SLE也可以)，此库按 Apache 2.0许可进行授权")
+> **"使用了wtof1996 编写的TI-Lua String Library Extension库(简写为SLE也可以)，此库按 Apache 2.0许可进行授权)"**
 	
 
 ##作者信息##
