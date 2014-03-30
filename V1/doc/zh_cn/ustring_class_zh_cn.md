@@ -226,10 +226,8 @@ Boolean类型，设置使用[]操作符或ustring.get返回值的类型是返回
 
 #####ustring:clear()#####
 
-* **形参列表:**
-* **返回值列表:**
-* **e.g:**
-            Clear the content of the string object.
+清空整个ustring对象，长度将置为0。
+
           
 #####ustring:concat(<ustring>), ustring:concat(<string>), ustring:concat(<number>)#####
 
