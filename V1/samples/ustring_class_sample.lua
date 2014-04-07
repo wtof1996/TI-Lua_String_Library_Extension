@@ -14,7 +14,7 @@ test_u_string = string.uchar(20013,25991,27979,35797);
 a = ustring(test_u_table);
 b = ustring(test_u_string);
 
-print(a, a.length);
+print(a, a:size());
 print(a == b);
 
 c = a:copy();

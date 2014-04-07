@@ -28,14 +28,16 @@
    public member:
       
       member variables:
-          P.S: It's hard to implement the read-only member, so BE CAREFUL when you use the "data" and "length" member.
-          
+          N.B: It's hard to implement the read-only member, so BE CAREFUL when you use the "data" and "length" member.
+               In fact many operations could be done by member function, so these members shouldn't be used directly.
+               
           ustring.data
               An array that contains the sequence of characters that make up the value of the string object.
               Please DO NOT modify or overwrite this member! You should use the member functions to do the work.
           
           ustring.length
               The length of the string (i.e. the number of characters).
+              If you want to read this member, use ustring:size() instead.
               Please DO NOT modify or overwrite this member! You should use the member functions to do the work.
           
           ustring.getchar
@@ -101,11 +103,14 @@
             at the end as many characters as needed to reach a size of n.If the Unicode code "value" is specified, the new elements
             are initialized as copies of value, otherwise, they are U+0000.
           
-          ustring:sub(a, b)
-            Returns the substring object that starts at a and continues until b.
-            
           ustring:set(index, value)
             Set the character indicated by index to value.The value must be a Unicode code.
+          
+          ustring:size()
+            Return the length of the string.
+          
+          ustring:sub(a, b)
+            Returns the substring object that starts at a and continues until b.
 ]]--
 
 ustring = class();
@@ -339,6 +344,24 @@ function fustring:resize(n, value)
     
 end
 
+function fustring:set(index, value)
+    if((self.data[index] == nil) or
+        (type(value) ~= "number") or
+        (value < 0) or
+        (value > 65535) or
+        ((math.ceil(value)) ~= value)
+      ) 
+    then 
+        return nil; 
+    end
+    self.data[index] = value;
+end
+
+
+function fustring:size()
+    return self.length;
+end
+
 function fustring:sub(a, b)
     if(a < 0) then a = self.length + a + 1; end
     if(b < 0) then b = self.length + b + 1; end
@@ -360,19 +383,6 @@ function fustring:sub(a, b)
     res.length = b - a + 1;
     
     return res;
-end
-
-function fustring:set(index, value)
-    if((self.data[index] == nil) or
-        (type(value) ~= "number") or
-        (value < 0) or
-        (value > 65535) or
-        ((math.ceil(value)) ~= value)
-      ) 
-    then 
-        return nil; 
-    end
-    self.data[index] = value;
 end
 
 --private member, which begin with 3 underscores
