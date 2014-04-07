@@ -3,7 +3,7 @@
 
 ##简介##
 
-此库提供了一个类似C++中string的字符串类，同时也支持Lua原生字符串中的大多数用法，可以很方便的实现UTF8字符串间的连接，查找，比较，截取，随机访问等。
+此库提供了一个类似C++中string的动态字符串类，同时也支持Lua原生字符串中的大多数用法，可以很方便的实现UTF8字符串间的连接，查找，比较，截取，插入，删除以及随机访问等操作。
 出于兼容性的考虑，这个类目前并不提供异常机制。
 
 ##成员列表##
@@ -12,7 +12,7 @@
         [] 
 			读取/修改指定位置的字符(位置从1开始计数)
         .. 	
-			连接两个ustring或者连接一个ustring对象与Lua内置的字符串或数字
+			将一个ustring对象与一个Lua内置字符串或数字或另一个ustring对象连接
         ==    
 			比较两个ustring对象是否相等
         tostring	
@@ -40,7 +40,7 @@
           		清空ustring对象
 
           ustring:concat(<ustring>), ustring:concat(<string>), ustring:concat(<number>)
-				连接两个ustring或者连接一个ustring对象与Lua内置的字符串或数字
+				将一个ustring对象与一个Lua内置字符串或数字或另一个ustring对象连接
 
           ustring:copy()
           		复制构造函数，通常复制ustring对象时应使用此函数而不是直接使用赋值操作以避免额外的影响
@@ -192,8 +192,8 @@ Boolean类型，设置使用[]操作符或ustring.get返回值的类型是返回
 #####ustring(), ustring(/string/), ustring(/unicode table/)#####
 
 * **形参列表:**
-		<nil> 	即形参为空，此时为默认构造函数，返回一个空的ustring对象
-		<string>即使用Lua内置字符串类型作为初值
+		<nil>           即形参为空，此时为默认构造函数，返回一个空的ustring对象
+		<string>		即使用Lua内置字符串类型作为初值
 		<unicode table> 使用一个含有Unicode代码的Table作为初值
 * **返回值列表:**
 		 ustring		即构造好的ustring对象
@@ -222,31 +222,50 @@ Boolean类型，设置使用[]操作符或ustring.get返回值的类型是返回
 #####ustring:assign(/string/), ustring:assign(/unicode table/)#####
 
 * **形参列表:**
-		<string>即使用Lua内置字符串类型作为新的内容
+		<string>		即使用Lua内置字符串类型作为新的内容
 		<unicode table> 使用一个含有Unicode代码的Table作为新的内容
 
 重设ustring对象的内容。
 * **e.g:**    
 > a = ustring("Test")
 > print(a)
+> --输出 Test
 > a:assign("Another String")
 > print(a)
+> --输出 Another String
 > a:assign({20013, 25991, 27979, 35797})
 > print(a)
+> --输出 中文测试
 
 
 #####ustring:clear()#####
 
-清空整个ustring对象，长度将置为0。
+清空整个ustring对象，其长度将置为0。
 
           
 #####ustring:concat(<ustring>), ustring:concat(<string>), ustring:concat(<number>)#####
 
 * **形参列表:**
+		<ustring>  要连接的ustring对象
+		<string>   要连接Lua内置字符串
+		<number>   要连接的数字
 * **返回值列表:**
+		res		   连接后的ustring对象
+将一个ustring对象与一个Lua内置字符串或数字或另一个ustring对象连接。
+如果参数不是ustring对象那么会自动转换为ustring对象(number会先转换为string然后利用构造函数构造ustring对象)。
+
+N.B:由于返回的是一个临时的ustring对象，故可以连续调用此成员函数。
+
 * **e.g:**
-            Concat two string object or string.If input is a number, the number will be convert into a string object.
-            The operator ".." is overloaded from this function.
+
+> a = ustring("测试");
+> b = ustring("test");
+> c = 123;
+> d = "another test";
+> e = a:concat(b):concat(c):concat(d);
+> print(e);	
+> --输出  测试test123another test
+
           
 #####ustring:copy()#####
 
@@ -356,7 +375,7 @@ Boolean类型，设置使用[]操作符或ustring.get返回值的类型是返回
 ##版权信息##
 
     TI-Lua String Library Extension
- 	Copyright 2014 wtof1996
+    Copyright 2014 wtof1996
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
