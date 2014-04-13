@@ -160,7 +160,7 @@ tostring转换操作符，即可直接显式/隐式使用tostring将ustring对�
 
 #####ustring.data#####
 
-   一个存储了ustring对象中所有字符的数组，是整个ustring对象的基础，可以类比C中的char数组。
+一个存储了ustring对象中所有字符的数组，是整个ustring对象的基础，可以类比C中的char数组。
 **请不要直接修改此成员，而是通过ustring类的相关成员函数进行修改！**
           
 #####ustring.length#####
@@ -187,7 +187,6 @@ Boolean类型，设置使用[]操作符或ustring.get返回值的类型是返回
       
 ####成员函数####
           
-#####构造函数#####
 
 #####ustring(), ustring(/string/), ustring(/unicode table/)#####
 
@@ -229,13 +228,13 @@ Boolean类型，设置使用[]操作符或ustring.get返回值的类型是返回
 * **e.g:**    
 > a = ustring("Test")
 > print(a)
-> --输出 Test
+> --输出 "Test"
 > a:assign("Another String")
 > print(a)
-> --输出 Another String
+> --输出 "Another String"
 > a:assign({20013, 25991, 27979, 35797})
 > print(a)
-> --输出 中文测试
+> --输出 "中文测试"
 
 
 #####ustring:clear()#####
@@ -243,7 +242,7 @@ Boolean类型，设置使用[]操作符或ustring.get返回值的类型是返回
 清空整个ustring对象，其长度将置为0。
 
           
-#####ustring:concat(<ustring>), ustring:concat(<string>), ustring:concat(<number>)#####
+#####ustring:concat(/ustring/), ustring:concat(/string/), ustring:concat(/number/)#####
 
 * **形参列表:**
 		<ustring>  要连接的ustring对象
@@ -264,25 +263,54 @@ N.B:由于返回的是一个临时的ustring对象，故可以连续调用此成
 > d = "another test";
 > e = a:concat(b):concat(c):concat(d);
 > print(e);	
-> --输出  测试test123another test
+> --输出  "测试test123another test"
 
           
 #####ustring:copy()#####
 
-* **形参列表:**
 * **返回值列表:**
+	res		当前ustring对象的一个副本
+
+生成当前的ustring对象的一个副本，即复制构造函数。
+
+**强烈建议使用此函数进行ustring对象的复制而不是直接赋值，以免对直接赋值后的对象进行的修改影响到原来的对象！！！(具体原因可参考下面的样例)**
+
 * **e.g:**
-            The copy constructor, return a copy form the string object.
-          
+
+> a = ustring("Reference")
+> b = ustring("No Reference")
+
+> c = b:copy()
+> d = a
+> d:insert("test", 1)
+> c:insert("test", 1)
+> --在c和d开头插入字符串 test
+> print(a, d)
+> --输出 "testReference	testReference"
+> print(b, c)
+> --输出"No Reference 	testNo Reference"
+> 
+> --显然，在没有使用复制构造函数的情况下，直接赋值类似于C++中引用的行为。
+
+
 #####ustring:erase(a, [b])#####
 
 * **形参列表:**
-* **返回值列表:**
+		a		想要删除的字符的位置或者是想要删除的区间的开始位置
+		[b]	   如果指定了此参数那么会删除[a, b]范围内的全部字符
+
+删除ustring对象的一部分字符并减少其长度。
+如果未指明参数b那么仅删除位于位置a的字符，否则会删除[a, b]范围内的全部字符。
+
 * **e.g:**
-            Erases part of the string object, reducing its length.
-            If b is not specificed, the character at position a will be erased; Otherwise this erases the sequence 
-            of characters in the range [a, b].
-            
+> a = ustring("A string for test")
+> a:erase(1)
+> print(a)
+> --输出 " string for test"
+> a:erase(1, 7)
+> print(a)
+> --输出 " for test"
+
 #####ustring:equal(b)#####
 
 * **形参列表:**

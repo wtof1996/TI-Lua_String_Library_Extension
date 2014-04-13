@@ -32,7 +32,7 @@
                In fact many operations could be done by member function, so these members shouldn't be used directly.
                
           ustring.data
-              An array that contains the sequence of characters that make up the value of the string object.
+              An array that contains the sequence of characters that make up the value of the ustring object.
               Please DO NOT modify or overwrite this member! You should use the member functions to do the work.
           
           ustring.length
@@ -51,41 +51,41 @@
             The construct function.
  
           ustring:assign(<string>), ustring:assign(<unicode table>)
-            Assign content to the string object.
+            Assign content to the ustring object.
           
           ustring:clear()
-            Clear the content of the string object.
+            Clear the content of the ustring object.
           
           ustring:concat(<ustring>), ustring:concat(<string>), ustring:concat(<number>)
-            Concat two string object or string.If input is a number, the number will be convert into a string object.
+            Concat two ustring object or string.If input is a number, the number will be convert into a ustring object.
             The operator ".." is overloaded from this function.
           
           ustring:copy()
-            The copy constructor, return a copy form the string object.
+            The copy constructor, return a copy form the ustring object.
           
           ustring:erase(a, [b])
-            Erases part of the string object, reducing its length.
+            Erases part of the ustring object, reducing its length.
             If b is not specificed, the character at position a will be erased; Otherwise this erases the sequence 
             of characters in the range [a, b].
             
           ustring:equal(b)
-            Test if the string object is equal to string object b.
+            Test if the ustring object is equal to ustring object b.
             The operator "==" is overloaded from this function.
             
           ustring:find(str)
-            Find content str in the string object. If it finds a match, the function returns the first index of str where this occurrence 
+            Find content str in the ustring object. If it finds a match, the function returns the first index of str where this occurrence 
             starts and ends; otherwise, it returns nil. This uses "Naive string search algorithm", so the asymptotic time complexity is O(mn).
           
           ustring:get(index)
-            Get a character form the string object. The return value depends on ustring.getchar.
+            Get a character form the ustring object. The return value depends on ustring.getchar.
             The indexing access operator "[]" overloaded from this function.
         
           ustring:get_str()
             Returns a Lua orginal string in UTF8 encode which contains a sequence of characters 
-            that make up the value of the string object.
+            that make up the value of the ustring object.
         
           ustring:insert(str, index)
-            Inserts additional characters into the string object before the character indicated by index.
+            Inserts additional characters into the ustring object before the character indicated by index.
         
           ustring:isempty()
             Returns whether the string is empty (i.e. whether its length is 0).
@@ -110,7 +110,7 @@
             Return the length of the string.
           
           ustring:sub(a, b)
-            Returns the substring object that starts at a and continues until b.
+            Returns the sub-ustring object that starts at a and continues until b.
 ]]--
 
 ustring = class();
@@ -229,7 +229,9 @@ function fustring:erase(a, b)
             table.remove(self.data, a);
         end
         self.length = self.length - (b - a + 1);
-        
+    else
+        table.remove(self.data, a);
+        self.length = self.length - 1;
     end
     
 end
