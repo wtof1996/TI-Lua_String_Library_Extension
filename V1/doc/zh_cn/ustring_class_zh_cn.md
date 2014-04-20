@@ -297,7 +297,7 @@ N.B:由于返回的是一个临时的ustring对象，故可以连续调用此成
 
 * **形参列表:**
 		a		想要删除的字符的位置或者是想要删除的区间的开始位置
-		[b]	   如果指定了此参数那么会删除[a, b]范围内的全部字符
+	    [b]	  如果指定了此参数那么会删除[a, b]范围内的全部字符
 
 删除ustring对象的一部分字符并减少其长度。
 如果未指明参数b那么仅删除位于位置a的字符，否则会删除[a, b]范围内的全部字符。
@@ -314,19 +314,38 @@ N.B:由于返回的是一个临时的ustring对象，故可以连续调用此成
 #####ustring:equal(b)#####
 
 * **形参列表:**
+		b		想要比较的ustring对象
 * **返回值列表:**
+		res 	一个Boolean值，表示比较的结果。相同为true，否则为false
+比较ustring对象b是否与当前ustring对象相等。
+与==操作符不同的是，若b为number或者string类型时，会先将其转换为ustring对象然后比较(number会先转换为string然后利用构造函数构造ustring对象)。
 * **e.g:**
-            Test if the string object is equal to string object b.
-            The operator "==" is overloaded from this function.
-            
+> a = ustring("string")
+> b = ustring("test")
+> print(a:equal(b), a:equal("string"))
+> --输出false	true
+
 #####ustring:find(str)#####
 
 * **形参列表:**
+		str		想要查找的ustring对象或者普通的string
 * **返回值列表:**
+		a, b		查找的结果，找到则为str第一次出现和结束的位置
+		nil		 未找到
+在当前ustring对象中查找str，若str是string则会将其转换为ustring对象。
+如果找到则返回str第一次出现的位置和结束，否则返回nil。
+此成员函数使用的是朴素字符串查找算法(Naive string search algorithm),渐进时间复杂度为O(mn)，对于很长的字符串可能需要较大的时间代价。
+
+**此成员函数不支持正则表达式！**
 * **e.g:**
-            Find content str in the string object. If it finds a match, the function returns the first index of str where this occurrence 
-            starts and ends; otherwise, it returns nil. This uses "Naive string search algorithm", so the asymptotic time complexity is O(mn).
-          
+> a = ustring("This is a ustring object in TI-Lua.这是一个测试字符串")
+> b = ustring("测试")
+> print(a:find(b))
+> --输出	40	41
+> print(a:find("object"))
+> --输出19	24
+
+
 #####ustring:get(index)#####
 
 * **形参列表:**
@@ -352,10 +371,9 @@ N.B:由于返回的是一个临时的ustring对象，故可以连续调用此成
         
 #####ustring:isempty()#####
 
-* **形参列表:**
 * **返回值列表:**
-* **e.g:**
-            Returns whether the string is empty (i.e. whether its length is 0).
+			res 	一个Boolean值，若当前ustring对象是空的则为true，否则为false
+测试当前ustring对象是否为空(即长度为0)。
         
 #####ustring.push_back(value)#####
 
@@ -387,9 +405,9 @@ N.B:由于返回的是一个临时的ustring对象，故可以连续调用此成
 
 #####ustring:size()#####
 
-* **形参列表:**
 * **返回值列表:**
-* **e.g:**
+ 		length		当前ustring对象的长度
+获取当前ustring对象的长度。
 
 #####ustring:sub(a, b)#####
 
