@@ -145,6 +145,7 @@ function ustring:init(init_data)
     end
     
     self.length = #self.data;
+
     
     setmetatable(self, t);
 end
@@ -283,8 +284,9 @@ function fustring:get_str()
 end
 
 function fustring:insert(str, index)
+    if(index > self.length + 1) then return nil; end;
     if(type(str) == "number") then
-          if((___ustring.checkUnicode(str)) and (self.data[index] ~= nil)) then
+          if((___ustring.checkUnicode(str))) then
               table.insert(self.data, index, str)
               self.length = self.length + 1;
               return true;
@@ -297,6 +299,7 @@ function fustring:insert(str, index)
     for i = str.length, 1, -1 do
         table.insert(self.data, index, str.data[i]);
     end
+    self.length = self.length + str.length;
     return true;
 end
 

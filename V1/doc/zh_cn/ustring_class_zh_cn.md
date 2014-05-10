@@ -61,7 +61,7 @@
 				将ustring对象转换为Lua内置字符串类型
 
           ustring:insert(str, index)
-				在当前ustring对象的index位置插入str
+				在当前ustring对象的index位置之前插入str
 
           ustring:isempty()
 				测试ustring对象是否为空
@@ -349,25 +349,39 @@ N.B:由于返回的是一个临时的ustring对象，故可以连续调用此成
 #####ustring:get(index)#####
 
 * **形参列表:**
+		index		想要读取的字符索引
 * **返回值列表:**
-* **e.g:**
-            Get a character form the string object. The return value depends on ustring.getchar.
-            The indexing access operator "[]" overloaded from this function.
+		res			读取的字符Unicode值或字符本身(取决于ustring.getchar的值)
+读取位于index的字符**(位置从1开始计数)**。
+若getchar成员的值为true则返回字符，否则返回Unicode代码(默认false)。
+
         
 #####ustring:get_str()#####
 
-* **形参列表:**
 * **返回值列表:**
-* **e.g:**
-            Returns a Lua orginal string in UTF8 encode which contains a sequence of characters 
-            that make up the value of the string object.
-        
+		res		与当前ustring内容相同的Lua内置类型字符串
+
+返回一个与当前ustring内容相同的Lua内置类型字符串。
+
 #####ustring:insert(str, index)#####
 
 * **形参列表:**
-* **返回值列表:**
+		str		想要插入的内容，可以是一个Unicode代码，一个ustring对象或者是Lua内置类型字符串
+		index	  想要插入的位置，会在此位置之前插入内容
+
+在index位置**之前**插入内容。
+**index的取值范围为[1, ustring:size() + 1]**。当index为ustring:size() + 1时表示在末尾插入字符串。
+当str为数字时会认为是一个Unicode代码，若为ustring对象或者是Lua内置类型字符串时会取其中的内容进行插入。
+
 * **e.g:**
-            Inserts additional characters into the string object before the character indicated by index.
+> a = ustring("Test")
+> b = a:copy()
+> c = ustring();
+> a:insert(27979, 1)
+> b:insert("Another Test ", 5)
+> c:insert(b, 1)
+> print(a, b, c)
+> --输出 测Test	TestAnother Test 	TestAnother Test 
         
 #####ustring:isempty()#####
 
