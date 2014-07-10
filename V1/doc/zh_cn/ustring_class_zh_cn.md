@@ -386,49 +386,61 @@ N.B:由于返回的是一个临时的ustring对象，故可以连续调用此成
 #####ustring:isempty()#####
 
 * **返回值列表:**
-			res 	一个Boolean值，若当前ustring对象是空的则为true，否则为false
+		res 	一个Boolean值，若当前ustring对象是空的则为true，否则为false
+
 测试当前ustring对象是否为空(即长度为0)。
         
 #####ustring.push_back(value)#####
 
 * **形参列表:**
-* **返回值列表:**
+        value   想要添加字符的Unicode代码 
+
+在当前ustring对象的末尾添加一个Unicdoe代码为value的字符，**ustring对象的长度会增加1**。
 * **e.g:**
-            Appends Unicode code value to the end of the string, increasing its length by one.
-        
+> a = ustring()
+> a:push_back(27979)
+> print(a)
+> --输出 测
+
 #####ustring:resize(n, [value])#####
 
 * **形参列表:**
-* **返回值列表:**
+        n       想要重设的长度
+        value   如果n比当前ustring长度大，则使用value所指定的Unicode代码进行填充。未指定则默认为U+0000
+
+调整当前ustring对象的大小为n。
+如果n比当前ustring对象小，则会删除末尾多余的字符，否则，则使用value所指定的Unicode代码进行填充。
 * **e.g:**
-            Resizes the string to a length of n characters.
 
-            If n is smaller than the current string length, the current value is shortened to its
-            first n character, removing the characters beyond the nth.
-
-            If n is greater than the current string length, the current content is extended by inserting 
-            at the end as many characters as needed to reach a size of n.If the Unicode code "value" is specified, the new elements
-            are initialized as copies of value, otherwise, they are U+0000.
           
 #####ustring:set(index, value)#####
 
 * **形参列表:**
-* **返回值列表:**
+        index   想要重设字符的位置
+        vlaue   想要重设的值，仅可以使用Unicode代码
+
+将位于index位置的字符的Unicode代码重设为vlaue。
 * **e.g:**
-            Set the character indicated by index to value.The value must be a Unicode code.
+
 
 #####ustring:size()#####
 
 * **返回值列表:**
  		length		当前ustring对象的长度
+
 获取当前ustring对象的长度。
 
 #####ustring:sub(a, b)#####
 
 * **形参列表:**
+       a        想要截取部分的起始位置
+       b        想要截取部分的结束位置
 * **返回值列表:**
+       res      截取后的ustring对象
+
+返回一个ustring对象，它包含当前ustring对象中区间[a, b]的所有字符。
 * **e.g:**
-            Returns the substring object that starts at a and continues until b.
+
             
 
 
@@ -455,13 +467,13 @@ N.B:由于返回的是一个临时的ustring对象，故可以连续调用此成
 
 ##作者信息##
 
-版本:V1.00
+版本:V1.01 Beta I
 
 设计&开发:wtof1996
 
 英文校对:chsi
 
-参与测试:
+参与测试:imath
 
 Email: wtof1996 at gmail.com
 

@@ -350,12 +350,7 @@ function fustring:resize(n, value)
 end
 
 function fustring:set(index, value)
-    if((self.data[index] == nil) or
-        (type(value) ~= "number") or
-        (value < 0) or
-        (value > 65535) or
-        ((math.ceil(value)) ~= value)
-      ) 
+    if((self.data[index] == nil) or (___ustring.checkUnicode(value) == false)) 
     then 
         return nil; 
     end
