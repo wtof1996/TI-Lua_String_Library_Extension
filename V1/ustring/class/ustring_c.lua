@@ -234,7 +234,7 @@ function fustring:erase(a, b)
         table.remove(self.data, a);
         self.length = self.length - 1;
     end
-    
+    return true;
 end
 
 function fustring:find(str)
@@ -317,7 +317,7 @@ function fustring:push_back(value)
     if(___ustring.checkUnicode(value) == false) then return nil; end
     self.length = self.length + 1;
     table.insert(self.data, value);
-    
+    return true; 
 end
 
 function fustring:resize(n, value)
@@ -350,8 +350,7 @@ function fustring:resize(n, value)
 end
 
 function fustring:set(index, value)
-    if((self.data[index] == nil) or (___ustring.checkUnicode(value) == false)) 
-    then 
+    if((self.data[index] == nil) or (___ustring.checkUnicode(value) == false)) then 
         return nil; 
     end
     self.data[index] = value;

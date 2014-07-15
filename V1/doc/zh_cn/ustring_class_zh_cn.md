@@ -405,13 +405,23 @@ N.B:由于返回的是一个临时的ustring对象，故可以连续调用此成
 #####ustring:resize(n, [value])#####
 
 * **形参列表:**
-        n       想要重设的长度
+        n       想要重设的长度，必须不小于0
         value   如果n比当前ustring长度大，则使用value所指定的Unicode代码进行填充。未指定则默认为U+0000
 
 调整当前ustring对象的大小为n。
 如果n比当前ustring对象小，则会删除末尾多余的字符，否则，则使用value所指定的Unicode代码进行填充。
 * **e.g:**
-
+> a = ustring("A Long Test String")
+> len = a:size()
+> print(len, a)
+> --输出 18	A Long Test String
+> a:resize(len + 1)
+> a[len + 1 ] = 27979
+> print(a)
+> --输出 A Long Test String测
+> a:resize(1)
+> print(a)
+> --输出 A
           
 #####ustring:set(index, value)#####
 
@@ -440,8 +450,11 @@ N.B:由于返回的是一个临时的ustring对象，故可以连续调用此成
 
 返回一个ustring对象，它包含当前ustring对象中区间[a, b]的所有字符。
 * **e.g:**
-
-            
+> a = ustring("这是一个测试用的字符串")
+> b = a:sub(3, 4)
+> print(b)
+> --输出 一个
+>             
 
 
 ##版权信息##
