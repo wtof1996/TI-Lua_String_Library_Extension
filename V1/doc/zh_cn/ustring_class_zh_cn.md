@@ -301,7 +301,7 @@ N.B:由于返回的是一个临时的ustring对象，故可以连续调用此成
 
 删除ustring对象的一部分字符并减少其长度。
 如果未指明参数b那么仅删除位于位置a的字符，否则会删除[a, b]范围内的全部字符。
-
+**若操作成功则返回true，否则返回nil。**
 * **e.g:**
 > a = ustring("A string for test")
 > a:erase(1)
@@ -330,13 +330,13 @@ N.B:由于返回的是一个临时的ustring对象，故可以连续调用此成
 * **形参列表:**
 		str		想要查找的ustring对象或者普通的string
 * **返回值列表:**
-		a, b		查找的结果，找到则为str第一次出现和结束的位置
-		nil		 未找到
+		a, b	   查找的结果，找到则为str第一次出现和结束的位置
+		false		未找到
 在当前ustring对象中查找str，若str是string则会将其转换为ustring对象。
-如果找到则返回str第一次出现的位置和结束，否则返回nil。
+**如果找到则返回str第一次出现的位置和结束位置，否则返回false。参数错误时返回nil。**
 此成员函数使用的是朴素字符串查找算法(Naive string search algorithm),渐进时间复杂度为O(mn)，对于很长的字符串可能需要较大的时间代价。
 
-**此成员函数不支持正则表达式！**
+ **此成员函数不支持正则表达式！**
 * **e.g:**
 > a = ustring("This is a ustring object in TI-Lua.这是一个测试字符串")
 > b = ustring("测试")
@@ -372,6 +372,7 @@ N.B:由于返回的是一个临时的ustring对象，故可以连续调用此成
 在index位置**之前**插入内容。
 **index的取值范围为[1, ustring:size() + 1]**。当index为ustring:size() + 1时表示在末尾插入字符串。
 当str为数字时会认为是一个Unicode代码，若为ustring对象或者是Lua内置类型字符串时会取其中的内容进行插入。
+**若操作成功则返回true，否则返回nil。**
 
 * **e.g:**
 > a = ustring("Test")
@@ -396,6 +397,8 @@ N.B:由于返回的是一个临时的ustring对象，故可以连续调用此成
         value   想要添加字符的Unicode代码 
 
 在当前ustring对象的末尾添加一个Unicdoe代码为value的字符，**ustring对象的长度会增加1**。
+**若操作成功则返回true，否则返回nil。**
+
 * **e.g:**
 > a = ustring()
 > a:push_back(27979)
@@ -410,6 +413,8 @@ N.B:由于返回的是一个临时的ustring对象，故可以连续调用此成
 
 调整当前ustring对象的大小为n。
 如果n比当前ustring对象小，则会删除末尾多余的字符，否则，则使用value所指定的Unicode代码进行填充。
+**若操作成功则返回true，否则返回nil。**
+
 * **e.g:**
 > a = ustring("A Long Test String")
 > len = a:size()
@@ -449,6 +454,7 @@ N.B:由于返回的是一个临时的ustring对象，故可以连续调用此成
        res      截取后的ustring对象
 
 返回一个ustring对象，它包含当前ustring对象中区间[a, b]的所有字符。
+**若参数错误则返回nil。**
 * **e.g:**
 > a = ustring("这是一个测试用的字符串")
 > b = a:sub(3, 4)

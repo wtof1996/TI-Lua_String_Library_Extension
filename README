@@ -3,7 +3,7 @@ This is a string library for TI-Lua on Nspire.
 'ctype' is a library just do the same things as the 'ctype.h' in C.
 'ustring' is a library which provides UTF8 string function support  & a UTF8 string class.
 
-Copyright 2013 wtof1996
+Copyright 2014 wtof1996
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
