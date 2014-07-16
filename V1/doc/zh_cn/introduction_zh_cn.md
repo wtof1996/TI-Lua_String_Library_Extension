@@ -25,13 +25,13 @@ P.S:若无明确说明，所有库均支持API 1.0或更高版本
 
 ##作者信息##
 
-版本:V1.00
+版本:V1.01 Beta I
 
 设计&开发:wtof1996
 
 英文校对:chsi
 
-参与测试:
+参与测试:imath
 
 Email: wtof1996 at gmail.com
 
